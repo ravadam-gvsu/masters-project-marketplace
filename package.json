@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.9",
+    "@mui/material": "^5.14.10",
+    "@mui/styles": "^5.14.10",
+    "@react-google-maps/api": "^2.19.2",
+    "@react-navigation/native": "^6.1.9",
+    "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -10,11 +18,33 @@
     "@types/node": "^16.18.48",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
+    "axios": "^1.5.0",
+    "buffer": "^6.0.3",
+    "classnames": "^2.3.2",
+    "dayjs": "^1.11.10",
+    "firebase": "^10.4.0",
+    "formik": "^2.4.5",
+    "formik-mui": "^5.0.0-alpha.0",
+    "formik-mui-x-date-pickers": "^0.0.1",
+    "framer-motion": "^10.16.4",
+    "history": "^5.3.0",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-lazy-load-image-component": "^1.6.0",
+    "react-loading-skeleton": "^3.3.1",
+    "react-native": "^0.72.7",
+    "react-redux": "^8.1.2",
+    "react-responsive-carousel": "^3.2.23",
+    "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.1",
+    "redux-persist": "^6.0.0",
+    "redux-saga": "^1.2.3",
+    "redux-thunk": "^2.4.2",
+    "talkjs": "^0.17.0",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,5 +69,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.198",
+    "@types/react-lazy-load-image-component": "^1.6.2",
+    "sass": "^1.69.5"
   }
 }

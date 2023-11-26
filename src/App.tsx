@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { StrictMode } from "react";
+import { Provider } from "react-redux";
+import Routes from "./routes/Routes";
+import { BrowserRouter } from "react-router-dom";
+import CssBaseline from "@mui/material/CssBaseline";
+import { UIProvider } from "./common/context/context";
+import { PersistGate } from "redux-persist/integration/react";
+import "./App.scss";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+// function App({ store, persistor }: any) {
+//   return (
+//     <BrowserRouter>
+//       <Provider store={store}>
+//         <UIProvider>
+//           <PersistGate persistor={persistor}>
+//             <CssBaseline />
+//             <Routes />
+//           </PersistGate>
+//         </UIProvider>
+//       </Provider>
+//     </BrowserRouter>
+//   );
+// }
+
+const App = ({ store, persistor }) => (
+  <StrictMode>
+    <Provider store={store}>
+      <UIProvider>
+        <PersistGate persistor={persistor}>
+          <Routes />
+        </PersistGate>
+      </UIProvider>
+    </Provider>
+  </StrictMode>
+);
 
 export default App;

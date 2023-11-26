@@ -1,0 +1,417 @@
+@use "./styles/mixins" as m;
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap");
+:root {
+  --orange: hsl(245, 82%, 39%);
+  --pale-orange: hsl(250, 50%, 44%);
+  --vd-blue: hsl(218, 78%, 29%);
+  --d-grayish-blue: rgb(104, 112, 125);
+  --grayish-blue: hsl(220, 14%, 75%);
+  --l-grayish-blue: hsl(223, 64%, 98%);
+  --white: hsl(0, 0%, 100%);
+
+  --p-fs: 1rem;
+}
+
+.App-header {
+  font-size: 1rem;
+  text-align: center;
+  font-family: "Oswald", sans-serif;
+  padding-bottom: 2rem;
+}
+.carousel-images {
+  position: relative;
+  border-radius: 10px;
+  height: 400px;
+  max-width: 650px;
+  margin: auto;
+  overflow: hidden;
+}
+.carousel-images img {
+  width: 99%;
+  height: 99%;
+  border-radius: 8px;
+  border: #ff00008e solid 2px;
+}
+.slide_direction {
+  display: flex;
+  justify-content: space-between;
+}
+.left,
+.right {
+  background-color: #fb666675;
+  color: #fff;
+  padding: 4px 0px 0px 1px;
+  margin: 0 20px;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 10px;
+  height: 25px;
+  width: 25px;
+}
+.left {
+  left: 0;
+}
+.right {
+  right: 0;
+}
+.carousel-indicator {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.dot {
+  background-color: #333;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+.active {
+  background-color: #fa2020;
+}
+
+.product-card {
+  max-width: 180px;
+  height: 230px;
+  border: 1px solid #e1e1e1;
+  text-align: center;
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @include m.mobile {
+    height: 200px;
+  }
+}
+
+.product-card:hover .product-card-content {
+  transform: translateY(-10px);
+}
+.product-card:hover .product-card-button {
+  bottom: 0;
+}
+
+.button-small {
+  font-size: 1.2rem;
+  padding: 1.2rem 1.6rem;
+}
+
+.button-block {
+  display: block;
+  width: 100%;
+}
+
+
+.description {
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 25px;
+}
+@media (max-width: 768px) {
+  .description {
+    padding: 10px;
+    margin-top: 25px;
+  }
+}
+
+.description p.pre {
+  color: var(--orange);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.description h1 {
+  color: var(--vd-blue);
+  text-transform: capitalize;
+  font-weight: 700;
+  font-size: 50px;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .description h1 {
+    font-size: 35px;
+    margin: 0;
+  }
+}
+
+.description p.desc {
+  color: var(--d-grayish-blue);
+  font-weight: 500;
+  line-height: 1.7;
+}
+@media (max-width: 768px) {
+  .description p.desc {
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+.description s {
+  color: var(--grayish-blue);
+}
+
+.description .price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+@media (max-width: 768px) {
+  .description .price {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+.description .price p {
+  margin: 0;
+}
+
+.description .price .main-tag {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.description .price .main-tag p:first-of-type {
+  color: var(--vd-blue);
+  font-size: 25px;
+  font-weight: 700;
+}
+
+// .description .price .main-tag p:last-of-type {
+//   color: var(--orange);
+//   background-color: var(--pale-orange);
+//   padding: 3px 10px;
+//   border-radius: 5px;
+//   font-weight: 700;
+// }
+
+.description .price s {
+  font-weight: 700;
+}
+
+.description .buttons {
+  display: flex;
+  align-items: center;
+  // justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .description .buttons {
+    flex-direction: column;
+  }
+  .description .buttons > * {
+    width: 100%;
+  }
+}
+
+.description .buttons .amount {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 15px;
+  width: 180px;
+  background-color: hsl(226.7, 42.9%, 95.9%);
+  border-radius: 7px;
+}
+@media (max-width: 992px) {
+  .description .buttons .amount {
+    width: 150px;
+  }
+}
+@media (max-width: 768px) {
+  .description .buttons .amount {
+    width: 100%;
+  }
+}
+
+.description .buttons .amount .minus {
+  display: flex;
+}
+
+.description .buttons .amount p {
+  font-weight: 700;
+  margin: 0;
+}
+
+.description .buttons .add-to-cart {
+  padding: 15px 40px;
+  background-color: var(--orange);
+  color: #fff;
+  text-transform: capitalize;
+  font-weight: 700;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  // flex: 1;
+  transition: 0.3s;
+  box-shadow: 0px 30px 20px -8px var(--pale-orange);
+}
+@media (max-width: 992px) {
+  .description .buttons .add-to-cart {
+    flex: unset;
+    padding: 15px 20px;
+  }
+}
+.description .buttons .add-to-cart:hover {
+  opacity: 0.6;
+}
+
+.description .buttons .add-to-cart svg path {
+  fill: #fff;
+}
+
+.gallery {
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.gallery .image img {
+  height: 415px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+@media (max-width: 992px) {
+  .gallery .image img {
+    height: 350px;
+  }
+}
+
+.gallery .thumbnails {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.gallery .thumbnails .img-holder {
+  position: relative;
+  height: 80px;
+  width: 80px;
+}
+@media (max-width: 992px) {
+  .gallery .thumbnails .img-holder {
+    height: 75px;
+    width: 75px;
+  }
+}
+
+.gallery .thumbnails img {
+  height: 60px;
+  cursor: pointer;
+  width: 80px;
+}
+@media (max-width: 992px) {
+  .gallery .thumbnails img {
+    height: 75px;
+  }
+}
+
+.gallery .backdrop .backdrop-content {
+  width: 415px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.gallery .backdrop .backdrop-content .image {
+  position: relative;
+}
+
+.gallery .backdrop-content .image .icon-button-prev {
+  position: absolute;
+  left: -21px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.gallery .backdrop-content .image .icon-button-next {
+  position: absolute;
+  right: -21px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.gallery .backdrop .thumbnails {
+  position: relative;
+}
+
+.gallery .backdrop .thumbnails .img-holder-backd {
+  height: 75px;
+  width: 75px;
+  position: relative;
+}
+
+.gallery .backdrop .thumbnails img {
+  height: 75px;
+}
+
+.MuiBadge-badge {
+  background-color: hsl(26, 100%, 55%);
+  font-family: inherit;
+  font-weight: 700;
+}
+.MuiBadge-standard {
+  font-family: inherit;
+  font-weight: 700;
+}
