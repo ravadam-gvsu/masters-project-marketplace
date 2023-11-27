@@ -3,35 +3,28 @@ import {
   Drawer,
   Box,
   Paper,
-  Toolbar,
-  Tooltip,
-  Divider,
   IconButton,
   Button,
-  Stack,
   List,
-  ListItem,
-  ListItemText,
   Typography,
-  ListItemAvatar,
   Avatar,
   useMediaQuery,
   ButtonGroup,
-  Link,
 } from "@mui/material";
 import {
-  Favorite,
-  Delete,
   AddCircleOutlineRounded,
   RemoveCircleOutlineRounded,
   Close,
 } from "@mui/icons-material";
-import { useState } from "react";
 import { useUIContext } from "../../common/context/context";
 import CheckoutButton from "./CheckoutButton";
 import { calculateTotal, displayMoney } from "../../utility/commonUtility";
-import { useDispatch, useSelector } from "react-redux";
-import { addQtyItem, minusQtyItem, removeFromCart } from "../../redux/actions/cart";
+import { useDispatch } from "react-redux";
+import {
+  addQtyItem,
+  minusQtyItem,
+  removeFromCart,
+} from "../../redux/actions/cart";
 
 const useStyles = () => ({
   cartHeader: {
@@ -82,13 +75,10 @@ const useStyles = () => ({
 
 export const Cart = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const { setCart, showCart, setShowCart, wishlist, setWishlist } =
+  // const dispatch = useDispatch();
+  const { cart, setCart, showCart, setShowCart, wishlist, setWishlist } =
     useUIContext();
-  const { cart, user } = useSelector((state: any) => ({
-    cart: state.cart,
-    user: state.auth,
-  }));
+
   console.log("setShowCart", showCart);
   console.log("cart details", cart);
   const theme = useTheme();
@@ -96,26 +86,48 @@ export const Cart = () => {
 
   const onAddQty = (product: any) => {
     if (product.quantity < product.maxQuantity) {
-      dispatch(addQtyItem(product.id));
+      setCart((items) =>
+        items.map((item: any) => {
+          if (product.id === item.id) {
+            return {
+              ...product,
+              quantity: product.quantity + 1,
+            };
+          }
+          return product;
+        })
+      );
     }
   };
 
   const onMinusQty = (product: any) => {
     if (product.maxQuantity >= product.quantity && product.quantity !== 0) {
-      dispatch(minusQtyItem(product.id));
+      setCart((items) =>
+        items.map((item: any) => {
+          if (product.id === item.id) {
+            return {
+              ...product,
+              quantity: product.quantity - 1,
+            };
+          }
+          return product;
+        })
+      );
     }
+    // dispatch(minusQtyItem(product.id));
   };
 
   const removeItem = (id: any) => {
-    dispatch(removeFromCart(id));
+    setCart(cart.filter((item: any) => item.id !== id));
+    // dispatch(removeFromCart(id));
 
     // setCart(cart.filter((item: any) => item.id !== id));
   };
 
-  const moveToWishlist = (product: any) => {
-    setWishlist([...wishlist, product]);
-    removeItem(product.id);
-  };
+  // const moveToWishlist = (product: any) => {
+  //   setWishlist([...wishlist, product]);
+  //   removeItem(product.id);
+  // };
 
   const cartEmptyContent = (
     <>
@@ -273,7 +285,7 @@ export const Cart = () => {
             </Paper>
 
             <Box
-            sx={{width: "100%"}}
+              sx={{ width: "100%" }}
               display="flex"
               alignItems="center"
               justifyContent="space-around"

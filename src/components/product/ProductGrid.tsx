@@ -1,10 +1,11 @@
 import { Box, Grid, Typography } from "@mui/material";
 import useCart from "../../hooks/useCart";
 import ProductItem from "./ProductItem";
+import { useUIContext } from "../../common/context/context";
 
-const ProductGrid = ({ products }: any) => {
+const ProductGrid = () => {
   const { addToCart, isItemOnCart } = useCart();
-
+  const { products } = useUIContext();
   return (
     <Box mt={3}>
       <Grid container direction="column" alignItems="center" spacing={6}>
@@ -16,7 +17,7 @@ const ProductGrid = ({ products }: any) => {
         </Grid>
         <Grid item xs={10}>
           <Grid container spacing={4}>
-            {products.items.length === 0
+            {products.length === 0
               ? new Array(12).fill({}).map((product, index) => (
                   <ProductItem
                     key={`product-skeleton ${index}`}
@@ -25,7 +26,7 @@ const ProductGrid = ({ products }: any) => {
                     addToCart={addToCart}
                   />
                 ))
-              : products.items.map((product) => (
+              : products.map((product) => (
                   <ProductItem
                     key={product.id}
                     isItemOnCart={isItemOnCart}

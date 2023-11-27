@@ -22,15 +22,12 @@ import "./App.scss";
 //   );
 // }
 
-const App = ({ store, persistor }) => (
+const App = () => (
   <StrictMode>
-    <Provider store={store}>
-      <UIProvider>
-        <PersistGate persistor={persistor}>
-          <Routes />
-        </PersistGate>
-      </UIProvider>
-    </Provider>
+    <UIProvider>
+      <CssBaseline />
+      <Routes />
+    </UIProvider>
   </StrictMode>
 );
 

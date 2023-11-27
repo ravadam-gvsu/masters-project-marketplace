@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import { Cart } from "../components/cart/Cart";
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/dashboard/components/navbar";
+import Navbar from "../components/dashboard/components/navbar/Navbar";
 
 const LayoutPage = () => {
   return (

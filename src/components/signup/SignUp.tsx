@@ -4,7 +4,7 @@ import { Grid, IconButton, Typography, createTheme } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import constants from "../../constants/validators";
 import AppLoader from "../../common/components/AppLoader";
-import { registerUser } from "../../services/firebaseapi";
+import { addUser, createAccount } from "../../services/firebaseapi";
 import { useDispatch } from "react-redux";
 import { signUp } from "../../redux/actions/auth";
 
@@ -85,20 +85,18 @@ function SignUp(props: any) {
     setLoader(val);
   };
 
-  
-  const dispatch = useDispatch();
-
   const customerRegistrationPost = async (payload: any) => {
     setLoader(true);
     console.log("Hit customer registration function");
-    dispatch(signUp({
-      fullname: `${payload.firstName} ${payload.lastName}`.trim(),
-      email: payload.email.trim().toLowerCase(),
-      password: payload.password.trim()
-    }));
-    // await registerUser(payload).then((res: any) => {
-    //   console.log("User registered", res);
-    // });
+    // dispatch(signUp({
+    //   fullname: `${payload.firstName} ${payload.lastName}`.trim(),
+    //   email: payload.email.trim().toLowerCase(),
+    //   password: payload.password.trim()
+    // }));
+    await createAccount(payload.email, payload.password).then(async (res: any) => {
+      const user = await addUser(res.user.uid, payload);
+      console.log("User registered", user);
+    });
     // await registerUser(payload)
     //   .then((res: any) => {
     //     if (res === constants.success) {

@@ -1,57 +1,52 @@
 /* eslint-disable react/forbid-prop-types */
-import PropType from "prop-types";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { setLoading } from "../../redux/actions/other";
-import { getProducts } from "../../redux/actions/product";
+import { useEffect, useState } from "react";
 import MessageDisplay from "../../common/components/DisplayMessage";
 import Boundary from "../../common/components/Boundary";
+import { useUIContext } from "../../common/context/context";
+import { getProducts } from "../../services/firebaseapi";
 
-const ProductList = (props) => {
-  const { products, isLoading, requestStatus, children } =
-    props;
+const ProductList = (props: any) => {
+  const { products, setProducts } = useUIContext();
+  const { children } = props;
   const [isFetching, setFetching] = useState(false);
-  const dispatch = useDispatch();
+  const [loader, setLoader] = useState(false);
 
-  const fetchProducts = () => {
+  const fetchProducts = async () => {
     setFetching(true);
-    dispatch(getProducts(products.lastRefKey));
+    const productsRes = await getProducts("");
+    setProducts(productsRes);
   };
 
   useEffect((): any => {
-    if (products.items.length === 0 || !products.lastRefKey) {
+    if (products.length === 0 || !products.lastRefKey) {
       fetchProducts();
     }
 
     window.scrollTo(0, 0);
-    return () => dispatch(setLoading(false));
+    return () => setLoader(false);
   }, []);
 
   useEffect(() => {
     setFetching(false);
   }, [products.lastRefKey]);
 
-  if (products.items.length === 0 && !isLoading) {
-    return (
-      <MessageDisplay
-        message={requestStatus?.message || "No products found."}
-      />
-    );
+  if (products.length === 0) {
+    return <MessageDisplay message={"No products found."} />;
   }
-  if (products.items.length === 0 && requestStatus) {
-    return (
-      <MessageDisplay
-        message={requestStatus?.message || "Something went wrong :("}
-        action={fetchProducts}
-        buttonLabel="Try Again"
-      />
-    );
-  }
+  // if (products.length === 0) {
+  //   return (
+  //     <MessageDisplay
+  //       message={"Something went wrong :("}
+  //       action={fetchProducts}
+  //       buttonLabel="Try Again"
+  //     />
+  //   );
+  // }
   return (
     <Boundary>
       {children}
       {/* Show 'Show More' button if products length is less than total products */}
-      {products.items.length < products.total && (
+      {/* {products.items.length < products.total && (
         <div className="d-flex-center padding-l">
           <button
             className="button button-small"
@@ -62,21 +57,9 @@ const ProductList = (props) => {
             {isFetching ? "Fetching Items..." : "Show More Items"}
           </button>
         </div>
-      )}
+      )} */}
     </Boundary>
   );
-};
-
-ProductList.defaultProps = {
-  requestStatus: null,
-};
-
-ProductList.propTypes = {
-  products: PropType.object.isRequired,
-  isLoading: PropType.bool.isRequired,
-  requestStatus: PropType.string,
-  children: PropType.oneOfType([PropType.arrayOf(PropType.node), PropType.node])
-    .isRequired,
 };
 
 export default ProductList;

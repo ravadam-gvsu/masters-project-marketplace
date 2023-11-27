@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Box,
   Grid,
@@ -18,21 +18,14 @@ import {
   Visibility,
   VisibilityOff,
 } from "@mui/icons-material";
-import { withStyles, createStyles } from "@mui/styles";
-import vaidators from "../../constants/validators";
-import { getUserInfo } from "../../services/middleware";
 import { signIn } from "../../services/firebaseapi";
 import routes from "../../constants/routes";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import classnames from "classnames";
+import { useNavigate } from "react-router-dom";
 import AppLoader from "../../common/components/AppLoader";
-import { useStyles } from "./styles";
-import { render } from "react-dom";
 
 import SignUp from "../signup/SignUp";
 import CommonToast from "../../common/components/CommonToast";
 import { useUIContext } from "../../common/context/context";
-import { useDispatch, useSelector } from "react-redux";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -120,32 +113,12 @@ export const Login = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  //   constructor(props: any) {
-  //     super(props);
-  //     this.state = {
-  //       showLoader: false,
-  //       isLogin: true,
-  //       showPassword: false,
-  //     };
-  //   }
 
   let navigate = useNavigate();
-  const { authStatus, isAuthenticating } = useSelector((state: any) => ({
-    authStatus: state.app.authStatus,
-    isAuthenticating: state.app.isAuthenticating
-  }));
-  const dispatch = useDispatch();
-  // const routeChange = () =>{
-  //   let path = `newPath`;
-  //   navigate(path);
-  // }
 
   const goToSignup = () => {
     let path = routes.customerRegistration;
     navigate(path);
-    // this.props.history.push(
-    //   `${this.props.match.path}${routes.customerRegistration}`
-    // );
     setIsLogin(false);
   };
 
@@ -168,14 +141,11 @@ export const Login = () => {
   const onSubmit = async (user: any, { setSubmitting }: any) => {
     setShowLoader(true);
     setSubmitting(true);
-    
-    // dispatch(signIn(user.email, user.password));
-    await signIn(user)
+    await signIn(user.email, user.password)
       .then((res: any) => {
-        if (res && res.status === vaidators.success) {
+        if (res.user) {
           let path = routes.home.baseurl;
           navigate(path);
-          //   this.props.history.push("/home");
         } else {
           //   this.props.handleShowToast({
           //     type: "error",

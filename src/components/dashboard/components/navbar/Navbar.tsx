@@ -32,7 +32,6 @@ import constants from "../../../../constants/validators";
 import { useNavigate } from "react-router-dom";
 import { useUIContext } from "../../../../common/context/context";
 import routes from "../../../../constants/routes";
-import { useSelector } from "react-redux";
 
 const theme = createTheme();
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -122,12 +121,7 @@ const pages = [
 
 export const Navbar = () => {
   const classes = useStyles(theme);
-  const store = useSelector((state: any) => ({
-    cartCount: state.cart.length,
-    user: state.auth,
-    isAuthenticating: state.app.isAuthenticating,
-    isLoading: state.app.loading
-  }));
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -297,7 +291,7 @@ export const Navbar = () => {
                     setShowCart(true);
                   }}
                 >
-                  <StyledBadge badgeContent={store?.cartCount} color="secondary">
+                  <StyledBadge badgeContent={cart?.length} color="secondary">
                     <ShoppingCart />
                   </StyledBadge>
                 </IconButton>

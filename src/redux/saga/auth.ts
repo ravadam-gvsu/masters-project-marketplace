@@ -16,7 +16,7 @@ import { resetCheckout } from '../actions/checkout';
 import { resetFilter } from '../actions/filter';
 import { setAuthenticating, setAuthStatus } from '../actions/other';
 import { clearProfile, setProfile } from '../actions/profile';
-import { addUser, appSignOut, createAccount, fetchUserDetails, getUser, passwordReset, registerUser, setAuthPersistence, signIn, signInWithGoogle } from '../../services/firebaseapi';
+import { addUser, appSignOut, createAccount, getUser, passwordReset, setAuthPersistence, signIn, signInWithGoogle } from '../../services/firebaseapi';
 
 function* handleError(e: any) {
     const obj = { success: false, type: 'auth', isError: true };
@@ -54,7 +54,7 @@ function* authSaga({ type, payload }: any): any {
         case SIGNIN:
             try {
                 yield initRequest();
-                yield call(signIn, payload);
+                // yield call(signIn, payload);
             } catch (e) {
                 yield handleError(e);
             }
@@ -70,7 +70,7 @@ function* authSaga({ type, payload }: any): any {
         case SIGNUP:
             try {
                 yield initRequest();
-                const fCreateAcc: any = call(registerUser, payload);
+                const fCreateAcc: any = call(createAccount, payload.email, payload.password);
                 const ref = yield fCreateAcc;
                 const fullname = payload.fullname.split(' ').map((name: any) => name[0].toUpperCase().concat(name.substring(1))).join(' ');
                 const user = {
@@ -124,7 +124,7 @@ function* authSaga({ type, payload }: any): any {
             break;
         }
         case ON_AUTHSTATE_SUCCESS: {
-            const snapshot: any = yield call(fetchUserDetails, payload.uid);
+            const snapshot: any = yield call(getUser, payload.uid);
 
             if (snapshot) { // if user exists in database
                 const user = snapshot;

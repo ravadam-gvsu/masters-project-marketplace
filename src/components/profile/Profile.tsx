@@ -26,23 +26,22 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { makeStyles } from "@mui/styles";
 import { useState } from "react";
-import Navbar from "../dashboard/components/navbar";
-import _ from "lodash";
 import { Field, Form, Formik, useFormikContext } from "formik";
 import { TextField as FTextField } from "formik-mui";
 import { PhotoCamera } from "@mui/icons-material";
 import { flushSync } from "react-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addItem, addProduct } from "../../redux/actions/product";
+import { addItem } from "../../redux/actions/product";
 import dayjs from "dayjs";
 import {
   IGMapsApiStatus,
   useScript,
 } from "../../utility/externalScriptProvider";
-import Map from '../../common/components/MapLocationPicker';
+import Map from "../../common/components/MapLocationPicker";
 import { locationsMap, pickupLocations } from "./Constants";
+import { useUIContext } from "../../common/context/context";
+import product from "../../redux/reducers/product";
+import { generateKey, saveItem, saveProduct } from "../../services/firebaseapi";
 
 export const Profile = () => {
   const key: string = "AIzaSyD-xBLLTuMQU7LTtB9_q8kw5wtfVbEcnF8";
@@ -50,17 +49,20 @@ export const Profile = () => {
     `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&callback=Function.prototype`
   );
   const [open, setOpen] = useState(false);
+  const { userDetails } = useUIContext();
   // const [mapDirections, setMapDirections] =
   //   useState<google.maps.DirectionsResult>();
-  const { isAuthenticating, profile } = useSelector((state: any) => ({
-    isAuthenticating: state.app.isAuthenticating,
-    profile: state.profile,
-  }));
+  // const { isAuthenticating, profile } = useSelector((state: any) => {
+  //   return {
+  //     isAuthenticating: state.app.isAuthenticating,
+  //     profile: state.profile,
+  //   };
+  // });
 
   const today = dayjs().format("MM/DD/YYYY");
   const yesterday = dayjs().subtract(1, "day");
   // const todayStartOfTheDay = today.startOf("day");
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const handleOpen = () => {
     setOpen(true);
@@ -127,6 +129,7 @@ export const Profile = () => {
   };
 
   const handleSubmit = async (details: any, { setSubmitting }: any) => {
+    const key = await generateKey();
     if (details.category === "sell") {
       const payload = {
         productTitle: details.productTitle,
@@ -141,9 +144,8 @@ export const Profile = () => {
         sellerName: details.sellerName,
         quantity: details.quantity,
       };
-      dispatch(addProduct(payload));
+      saveProduct(key, payload);
     } else {
-      
       const payload = {
         status: details.status,
         // date: details.date,
@@ -154,19 +156,18 @@ export const Profile = () => {
         description: details.description,
         category: details.category,
       };
-      dispatch(addItem(payload));
+      saveItem(key, payload);
     }
   };
 
-  const firstName = profile && profile["firstName"];
-  const lastName = profile && profile["lastName"];
-  const mobile = profile && profile["mobile"];
-  const registeredEmailAddress = profile && profile["email"];
-  const city = profile && profile["city"];
+  const firstName = userDetails.user && userDetails.user["firstName"];
+  const lastName = userDetails.user && userDetails.user["lastName"];
+  const mobile = userDetails.user && userDetails.user["mobile"];
+  const registeredEmailAddress = userDetails.user && userDetails.user["email"];
+  const city = userDetails.user && userDetails.user["city"];
 
   return (
-<Box>
-
+    <Box>
       <Grid item mt={3}>
         <Grid container>
           <Grid item xs={2} />
@@ -256,22 +257,25 @@ export const Profile = () => {
           <Grid item xs={2} />
           <Grid item xs={8}>
             {/* <Paper> */}
-              <Grid container style={{alignItems: "center", justifyContent: "space-around"}}>
-                <Grid item>
-                  <Typography variant="button">
-                    Would you like to post an ad of your product?
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleOpen}
-                  >
-                    Post Ad!
-                  </Button>
-                </Grid>
+            <Grid
+              container
+              style={{ alignItems: "center", justifyContent: "space-around" }}
+            >
+              <Grid item>
+                <Typography variant="button">
+                  Would you like to post an ad of your product?
+                </Typography>
               </Grid>
+              <Grid item>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleOpen}
+                >
+                  Post Ad!
+                </Button>
+              </Grid>
+            </Grid>
             {/* </Paper> */}
           </Grid>
           <Grid item xs={2} />
@@ -494,7 +498,7 @@ export const Profile = () => {
                         variant="outlined"
                         value={values.picklocation}
                         onChange={(e: any) => {
-                          setFieldValue('coordinates', locationsMap[e])
+                          setFieldValue("coordinates", locationsMap[e]);
                           handleChange(e);
                         }}
                         onBlur={handleBlur}

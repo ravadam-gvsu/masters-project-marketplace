@@ -5,30 +5,19 @@ import { setCartTotalCount } from "../../../../redux/actions/app";
 import AppLoader from "../../../../common/components/AppLoader";
 import { deepMergeObjectSub } from "../../../../utility/commonUtility";
 import { useUIContext } from "../../../../common/context/context";
-import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../../../../redux/actions/product";
+import { useDispatch } from "react-redux";
 import { setLoading } from "../../../../redux/actions/other";
 import _get from "lodash/get";
 import useCart from "../../../../hooks/useCart";
+import { getProducts } from "../../../../services/firebaseapi";
 
-export const Product = (props) => {
-  const products = useSelector((state: any) => {
-    console.log("hit the state");
-    return state.products?.items;
-  });
-
+export const Product = () => {
+  const {products, setProducts, cart, setCart} = useUIContext();
   const [loader, setLoader] = useState(false);
   const [isFetching, setFetching] = useState(false);
   const [showFooter, setShowFooter] = useState(false);
-  const { cart, setCart } = useUIContext();
 
-  const dispatch = useDispatch();
-  const { addToCart, isItemOnCart } = useCart();
-
-  const fetchProducts = async () => {
-    setFetching(true);
-    dispatch(getProducts({}));
-  };
+  const isItemOnCart = (id) => !!(cart && cart.find((item) => item.id === id));
 
   useEffect(() => {
     if (!products || products.length === 0 || !products.lastRefKey) {
@@ -37,7 +26,7 @@ export const Product = (props) => {
     }
 
     window.scrollTo(0, 0);
-    dispatch(setLoading(false));
+    setLoader(false);
     //return () => dispatch(setLoading(false));
   }, []);
 
@@ -46,21 +35,23 @@ export const Product = (props) => {
   }, [products]);
 
   // useEffect(() => {
+  //   setFetching(true);
   //   fetchProducts();
   // }, []);
 
-  // const fetchProducts = async () => {
-  //   setLoader(true);
-  //   productsArr = [];
-  //   const products = await getProducts("");
-  //   if (products) {
-  //     productsArr = products.map((product: any) => {
-  //       return { ...product };
-  //     });
-  //   }
-  //   setProducts(productsArr);
-  //   setLoader(false);
-  // };
+  const fetchProducts = async () => {
+    setLoader(true);
+    setFetching(true);
+    let productsArr = [];
+    const res: any = await getProducts("");
+    if (res.products) {
+      productsArr = res.products.map((product: any) => {
+        return { ...product };
+      });
+    }
+    setProducts(productsArr);
+    setLoader(false);
+  };
 
   const calculateCartQuantity = () => {
     const cartItems: any = [];
@@ -72,9 +63,9 @@ export const Product = (props) => {
     setCartTotalCount(cartCountTemp);
   };
 
-  // const addToCartItems = (product: any) => {
-  //   setCart([...cart, product]);
-  // };
+  const addToCart = (product: any) => {
+    setCart([...cart, product]);
+  };
 
   const decreaseQuantity = (product: any) => {
     let cartItems: any = [];
