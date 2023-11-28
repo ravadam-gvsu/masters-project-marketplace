@@ -2,17 +2,19 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { productsCheckout } from "../../services/middleware";
 import { Button } from "@mui/material";
+import { useUIContext } from "../../common/context/context";
 
 const CheckoutButton = ({ cartItems }: any) => {  
-  const { user } = useSelector((state: any) => ({
-    user: state.auth,
-  }));
+  // const { user } = useSelector((state: any) => ({
+  //   user: state.auth,
+  // }));
+  const {userDetails} = useUIContext();
   
-  console.log("userDetails", user);
+  console.log("userDetails", userDetails.user.id);
   const handleCheckout = async () => {
     const payload = {
       cartItems,
-      userId: user.id,
+      userId: userDetails.user.id,
     };
 
     await productsCheckout(payload)

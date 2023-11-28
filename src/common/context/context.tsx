@@ -16,7 +16,35 @@ export const UIProvider = ({ children }: any) => {
   const [showCart, setShowCart] = useState(false);
   const [showWishlist, setShowWishlist] = useState(false);
   const [userDetails, setUserDetails] = useState({});
-  const [products, setProducts] = useState([]);
+  const [productsCollection, setProducts] = useState({
+    products: []
+  });
+
+  const isItemOnCart = (id: any) => {
+    return cart.some((item:any) => item.id === id);
+  }
+
+  const addToCart = (product) => {
+    const cartItem:any = cart.find((item:any) => item.id === product.id);
+    if (cartItem) {
+      cartItem.quantity += 1;
+      setCart([...cart]);
+    } else {
+      setCart([...cart, product] as any);
+    }
+  };
+
+  const reduceFromCart = (product) => {
+    const cartItem:any = cart.find((item:any) => item.id === product.id);
+    if (cartItem) {
+      cartItem.quantity -= 1;
+      setCart([...cart]);
+    }
+  };
+
+  const trashFromCart = (product) => {
+    setCart(cart.filter((item: any) => item.id !== product.id));
+  };
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -43,9 +71,13 @@ export const UIProvider = ({ children }: any) => {
         setWishlist,
         showWishlist,
         setShowWishlist,
-        products,
+        productsCollection,
         setProducts,
         userDetails,
+        isItemOnCart,
+        addToCart,
+        reduceFromCart,
+        trashFromCart
       }}
     >
       {children}

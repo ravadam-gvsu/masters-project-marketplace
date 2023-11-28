@@ -1,12 +1,8 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { withStyles } from "@mui/material";
-import classnames from "classnames";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useState } from "react";
 // import { Carousel } from "react-responsive-carousel";
 import {
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
   CardActions,
   Avatar,
@@ -20,20 +16,17 @@ import {
 } from "@mui/material";
 import {
   MoreVert as MoreVertIcon,
-  AcUnit as AcUnitIcon,
 } from "@mui/icons-material";
 import _, { toUpper } from "lodash";
 import constants from "../../constants/validators";
 import dayjs from "dayjs";
 import {
-  priceValueFormatter,
   usagePeriodConverter,
 } from "../../utility/commonUtility";
-import { ModalComponent } from "./ModalComponent";
 import { createTheme } from "@mui/material/styles";
 import Carousel from "./ImageCarousel";
-import { Link, useNavigate } from "react-router-dom";
-import routes from "../../constants/routes";
+import { useNavigate } from "react-router-dom";
+import { useUIContext } from "../context/context";
 
 const theme = createTheme({
   palette: {
@@ -139,6 +132,14 @@ const styles = (theme: any) => ({
       color: theme.palette.common.white,
     },
   },
+  selectCartBtn: {
+    border: `2px solid ${theme.palette.primary.main}`,
+    "&:hover": {
+      background: theme.palette.primary.main,
+      color: theme.palette.common.white,
+    },
+    marginRight: 2
+  },
   incBtn: {
     background: theme.palette.common.white,
     minWidth: theme.spacing(7),
@@ -197,8 +198,9 @@ const styles = (theme: any) => ({
   },
 });
 
-export const ProductCard = ({ product, addToCart, removeFromCart }: any) => {
+export const ProductCard = ({ product }: any) => {
   let navigate = useNavigate();
+  const { isItemOnCart, addToCart } = useUIContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const classes = styles(theme);
   const handleOpen = () => {
@@ -274,7 +276,7 @@ export const ProductCard = ({ product, addToCart, removeFromCart }: any) => {
   // }, []);
 
   return (
-    <Card sx={classes.root} onClick={onClickItem}>
+    <Card sx={classes.root}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" sx={classes.avatar}>
@@ -370,16 +372,24 @@ export const ProductCard = ({ product, addToCart, removeFromCart }: any) => {
             </Box>
           </Grid>
         ) : ( */}
-          <Button
-            onClick={(e: any) => {
-              e && e.stopPropagation() && e.stopImmediatePropagation();
-              addToCart({...product, selectedQuantity: 1});
-            }}
-            variant="outlined"
-            sx={classes.addedToCartBtn}
-          >
-            <Typography variant="button">{"Add to Cart"}</Typography>
-          </Button>
+        <Button
+          onClick={onClickItem}
+          variant="outlined"
+          sx={classes.selectCartBtn}
+        >
+          <Typography variant="button">View Details</Typography>
+        </Button>
+        <Button
+          onClick={(e: any) => {
+            addToCart({ ...product, selectedQuantity: 1 });
+            if (e) e.stopPropagation();
+            e.preventDefault();
+          }}
+          variant="outlined"
+          sx={classes.addedToCartBtn}
+        >
+          <Typography variant="button">{"Add to Cart"}</Typography>
+        </Button>
       </CardActions>
     </Card>
   );

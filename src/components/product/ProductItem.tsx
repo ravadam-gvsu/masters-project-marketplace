@@ -31,6 +31,7 @@ import {
 import Carousel from "../../common/components/ImageCarousel";
 import dayjs from "dayjs";
 import constants from "../../constants/validators";
+import { useUIContext } from "../../common/context/context";
 
 const theme = createTheme({
   palette: {
@@ -193,9 +194,10 @@ const styles = (theme: any) => ({
     zIndex: 8,
   },
 });
-const ProductItem = ({ product, isItemOnCart, addToCart }) => {
+const ProductItem = ({ product }) => {
   const classes = styles(theme);
   const navigate = useNavigate();
+  const {isItemOnCart, addToCart} = useUIContext();
 
   const onClickItem = () => {
     if (!product) return;
@@ -326,7 +328,7 @@ const ProductItem = ({ product, isItemOnCart, addToCart }) => {
           sx={classes.addedToCartBtn}
         >
           <Typography variant="button">
-            {itemOnBasket ? "Remove from Cart" : "Add to Cart"}
+            Add to Cart
           </Typography>
         </Button>
       </CardActions>

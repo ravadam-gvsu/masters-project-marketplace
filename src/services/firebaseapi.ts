@@ -319,9 +319,12 @@ export const setAuthPersistence = () =>
 
 // // PRODUCT ACTIONS --------------
 
-export const getSingleProduct = (id) => getDoc(doc(db, "products", id));
+export const getSingleProduct = async (id) => {
+    const product = await getDoc(doc(db, "products", id));
+    return { id: product.id, ...product.data()};
+};
 
-export const getProducts = (lastRefKey: any) => {
+export const getProducts = (lastRefKey: any = "") => {
     let didTimeout = false;
 
     return new Promise((resolve, reject) => {

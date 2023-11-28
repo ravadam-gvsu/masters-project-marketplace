@@ -4,8 +4,10 @@ import ProductItem from "./ProductItem";
 import { useUIContext } from "../../common/context/context";
 
 const ProductGrid = () => {
-  const { addToCart, isItemOnCart } = useCart();
-  const { products } = useUIContext();
+  // const { addToCart, isItemOnCart } = useCart();
+  const { productsCollection } = useUIContext();
+  console.log('products');
+  console.log(productsCollection);
   return (
     <Box mt={3}>
       <Grid container direction="column" alignItems="center" spacing={6}>
@@ -17,20 +19,16 @@ const ProductGrid = () => {
         </Grid>
         <Grid item xs={10}>
           <Grid container spacing={4}>
-            {products.length === 0
+            {productsCollection.total === 0
               ? new Array(12).fill({}).map((product, index) => (
                   <ProductItem
                     key={`product-skeleton ${index}`}
                     product={product}
-                    isItemOnCart={isItemOnCart}
-                    addToCart={addToCart}
                   />
                 ))
-              : products.map((product) => (
+              : productsCollection.products.map((product) => (
                   <ProductItem
                     key={product.id}
-                    isItemOnCart={isItemOnCart}
-                    addToCart={addToCart}
                     product={product}
                   />
                 ))}

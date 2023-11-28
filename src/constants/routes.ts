@@ -11,7 +11,7 @@ const routes = {
       },
     },
     checkoutSuccess: "/checkoutSuccess",
-    viewProduct: "/product/:id"
+    viewProduct: "/viewProduct/:id"
   };
   export default routes;
   

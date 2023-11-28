@@ -6,31 +6,32 @@ import { useUIContext } from "../../common/context/context";
 import { getProducts } from "../../services/firebaseapi";
 
 const ProductList = (props: any) => {
-  const { products, setProducts } = useUIContext();
+  const { productsCollection, setProducts } = useUIContext();
   const { children } = props;
   const [isFetching, setFetching] = useState(false);
   const [loader, setLoader] = useState(false);
 
   const fetchProducts = async () => {
     setFetching(true);
-    const productsRes = await getProducts("");
+    const productsRes = await getProducts();
     setProducts(productsRes);
   };
 
   useEffect((): any => {
-    if (products.length === 0 || !products.lastRefKey) {
-      fetchProducts();
-    }
+    // if (productsCollection.length === 0 || !productsCollection.lastRefKey) {
+    //   fetchProducts();
+    // }
 
+    fetchProducts()
     window.scrollTo(0, 0);
     return () => setLoader(false);
   }, []);
 
   useEffect(() => {
     setFetching(false);
-  }, [products.lastRefKey]);
+  }, [productsCollection.lastRefKey]);
 
-  if (products.length === 0) {
+  if (productsCollection.length === 0) {
     return <MessageDisplay message={"No products found."} />;
   }
   // if (products.length === 0) {

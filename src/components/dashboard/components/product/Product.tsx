@@ -12,7 +12,7 @@ import useCart from "../../../../hooks/useCart";
 import { getProducts } from "../../../../services/firebaseapi";
 
 export const Product = () => {
-  const {products, setProducts, cart, setCart} = useUIContext();
+  const {productsCollection, setProducts, cart, setCart} = useUIContext();
   const [loader, setLoader] = useState(false);
   const [isFetching, setFetching] = useState(false);
   const [showFooter, setShowFooter] = useState(false);
@@ -20,9 +20,10 @@ export const Product = () => {
   const isItemOnCart = (id) => !!(cart && cart.find((item) => item.id === id));
 
   useEffect(() => {
-    if (!products || products.length === 0 || !products.lastRefKey) {
+    if (// !productsCollection || // productsCollection.length === 0 ||
+       !productsCollection.lastRefKey) {
       fetchProducts();
-      console.log("products fetched", products);
+      console.log("products fetched", productsCollection);
     }
 
     window.scrollTo(0, 0);
@@ -32,7 +33,7 @@ export const Product = () => {
 
   useEffect(() => {
     setFetching(false);
-  }, [products]);
+  }, [productsCollection]);
 
   // useEffect(() => {
   //   setFetching(true);
@@ -42,14 +43,8 @@ export const Product = () => {
   const fetchProducts = async () => {
     setLoader(true);
     setFetching(true);
-    let productsArr = [];
-    const res: any = await getProducts("");
-    if (res.products) {
-      productsArr = res.products.map((product: any) => {
-        return { ...product };
-      });
-    }
-    setProducts(productsArr);
+    const res: any = await getProducts();
+    setProducts(res);
     setLoader(false);
   };
 
@@ -61,10 +56,6 @@ export const Product = () => {
         cartCountTemp += item.quantity;
       });
     setCartTotalCount(cartCountTemp);
-  };
-
-  const addToCart = (product: any) => {
-    setCart([...cart, product]);
   };
 
   const decreaseQuantity = (product: any) => {
@@ -101,17 +92,14 @@ export const Product = () => {
         </Grid>
         <Grid item xs={10}>
           <Grid container spacing={4}>
-            {products &&
-              products.map((product: any, index: string) => {
+            {productsCollection.total &&
+              productsCollection.products.map((product: any, index: string) => {
                 // console.log({ product });
                 return (
                   <Grid item key={"pc" + index}>
                     <ProductCard
                       key={"pc" + index}
                       product={product}
-                      addToCart={addToCart}
-                      isItemOnCart={isItemOnCart}
-                      removeFromCart={decreaseQuantity}
                     />
                   </Grid>
                 );

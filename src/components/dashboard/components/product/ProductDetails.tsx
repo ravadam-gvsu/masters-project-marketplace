@@ -8,10 +8,12 @@ import Gallery from "./Gallery";
 import Description from "./Description";
 import { useParams } from "react-router-dom";
 import useProduct from "../../../../hooks/useProduct";
+import { getSingleProduct } from "../../../../services/firebaseapi";
 
 export const ProductDetails = () => {
   const { id } = useParams();
-  const { product, isLoading, error } = useProduct(id);
+  // const { product, isLoading, error } = useProduct(id);
+  const [product, setProduct] = useState();
   const [products, setProducts] = useState([]);
   const [loader, setLoader] = useState(false);
   const { cart, setCart } = useUIContext();
@@ -20,6 +22,12 @@ export const ProductDetails = () => {
   // const addToCartItems = (product: any) => {
   //   setCart([...cart, product]);
   // };
+
+  useEffect(() => {
+    if (id) {
+      getSingleProduct(id).then((pd) => setProduct(pd as any));
+    }
+  }, [id]);
 
   const addQuant = () => {
     setQuant(quant + 1);
@@ -36,15 +44,18 @@ export const ProductDetails = () => {
 
   return (
     <section className="core">
-      <Gallery product={product} />
-      {/* <MobileGallery /> */}
-      <Description
-        product={product}
-        onQuant={quant}
-        onAdd={addQuant}
-        onRemove={removeQuant}
-        onSetOrderedQuant={setOrderedQuant}
-      />
+      {product && (
+        <>
+          <Gallery product={product} />
+          <Description
+            product={product}
+            onQuant={quant}
+            onAdd={addQuant}
+            onRemove={removeQuant}
+            onSetOrderedQuant={setOrderedQuant}
+          />
+        </>
+      )}
     </section>
   );
 };

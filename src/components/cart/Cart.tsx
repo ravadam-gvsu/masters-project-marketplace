@@ -76,7 +76,7 @@ const useStyles = () => ({
 export const Cart = () => {
   const classes = useStyles();
   // const dispatch = useDispatch();
-  const { cart, setCart, showCart, setShowCart, wishlist, setWishlist } =
+  const { cart, setCart, showCart, setShowCart, addToCart, reduceFromCart, trashFromCart } =
     useUIContext();
 
   console.log("setShowCart", showCart);
@@ -141,12 +141,11 @@ export const Cart = () => {
   const cartContent =
     cart &&
     cart.map((item: any, index: string) => (
-      <>
-        <Box key={"cart" + index} sx={classes.CartDetails}>
+      <Box key={"cart" + index} sx={classes.CartDetails}>
           <Box sx={classes.cartControls}>
             <IconButton
               sx={{ color: "rgb(210, 63, 87)" }}
-              onClick={() => onAddQty(item)}
+              onClick={() => addToCart(item)}
               disabled={item.maxQuantity === item.quantity}
             >
               <AddCircleOutlineRounded />
@@ -154,7 +153,7 @@ export const Cart = () => {
             <Typography variant="h6">{item.quantity}</Typography>
             <IconButton
               sx={{ color: item.quantity && "rgb(210, 63, 87)" }}
-              onClick={() => onMinusQty(item)}
+              onClick={() => reduceFromCart(item)}
               disabled={item.quantity === 1}
             >
               <RemoveCircleOutlineRounded />
@@ -174,11 +173,10 @@ export const Cart = () => {
               {item.sellingPrice}
             </Typography>
           </Box>
-          <IconButton onClick={() => removeItem(item.id)}>
+          <IconButton onClick={() => trashFromCart(item)}>
             <Close />
           </IconButton>
         </Box>
-      </>
     ));
 
   // const cartFilledContent = cart.map((item: any) => (
