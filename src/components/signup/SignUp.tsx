@@ -2,11 +2,8 @@ import React, { useState } from "react";
 import { RegistrationFieldsForm } from "./RegistrationFields";
 import { Grid, IconButton, Typography, createTheme } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
-import constants from "../../constants/validators";
 import AppLoader from "../../common/components/AppLoader";
 import { addUser, createAccount } from "../../services/firebaseapi";
-import { useDispatch } from "react-redux";
-import { signUp } from "../../redux/actions/auth";
 
 const theme = createTheme();
 const styles = (theme: any) => ({
@@ -23,7 +20,7 @@ const styles = (theme: any) => ({
     background: "url(assets/banner.png) 50% center / cover no-repeat fixed",
   },
   loginPanel: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // "#00000870",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: 0,
     height: "100%",
     textAlign: "center",
@@ -77,45 +74,16 @@ const styles = (theme: any) => ({
 });
 
 function SignUp(props: any) {
-  const { parentClasses, backToLogin } = props;
+  const { backToLogin } = props;
   const classes = styles(theme);
   const [loader, setLoader] = useState(false);
 
-  const toggleLoader = (val: boolean) => {
-    setLoader(val);
-  };
-
   const customerRegistrationPost = async (payload: any) => {
     setLoader(true);
-    console.log("Hit customer registration function");
-    // dispatch(signUp({
-    //   fullname: `${payload.firstName} ${payload.lastName}`.trim(),
-    //   email: payload.email.trim().toLowerCase(),
-    //   password: payload.password.trim()
-    // }));
     await createAccount(payload.email, payload.password).then(async (res: any) => {
       const user = await addUser(res.user.uid, payload);
       console.log("User registered", user);
     });
-    // await registerUser(payload)
-    //   .then((res: any) => {
-    //     if (res === constants.success) {
-    //       // backToLogin({ type: "success", message: "Registration Successful!" })
-    //     } else {
-    //       props.handleShowToast({
-    //         type: "error",
-    //         message: "Error occured, please try again!",
-    //       });
-    //     }
-    //   })
-    //   .catch((err: any) => {
-    //     props.handleShowToast({
-    //       type: "error",
-    //       message: err,
-    //     });
-    //     console.log(err);
-    //   });
-
     setLoader(false);
   };
 
@@ -143,7 +111,6 @@ function SignUp(props: any) {
       </Grid>
       <Grid item>
         <RegistrationFieldsForm
-          // toggleLoader={toggleLoader}
           customerRegistrationPost={customerRegistrationPost}
           parentClasses={classes}
         />

@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Grid,
-  Paper,
   Typography,
   Dialog,
   DialogTitle,
@@ -31,7 +30,6 @@ import { Field, Form, Formik, useFormikContext } from "formik";
 import { TextField as FTextField } from "formik-mui";
 import { PhotoCamera } from "@mui/icons-material";
 import { flushSync } from "react-dom";
-import { addItem } from "../../redux/actions/product";
 import dayjs from "dayjs";
 import {
   IGMapsApiStatus,
@@ -39,8 +37,7 @@ import {
 } from "../../utility/externalScriptProvider";
 import Map from "../../common/components/MapLocationPicker";
 import { locationsMap, pickupLocations } from "./Constants";
-import { useUIContext } from "../../common/context/context";
-import product from "../../redux/reducers/product";
+import { useUIContext } from "../../hooks/context";
 import { generateKey, saveItem, saveProduct } from "../../services/firebaseapi";
 
 export const Profile = () => {
@@ -50,19 +47,9 @@ export const Profile = () => {
   );
   const [open, setOpen] = useState(false);
   const { userDetails } = useUIContext();
-  // const [mapDirections, setMapDirections] =
-  //   useState<google.maps.DirectionsResult>();
-  // const { isAuthenticating, profile } = useSelector((state: any) => {
-  //   return {
-  //     isAuthenticating: state.app.isAuthenticating,
-  //     profile: state.profile,
-  //   };
-  // });
 
   const today = dayjs().format("MM/DD/YYYY");
   const yesterday = dayjs().subtract(1, "day");
-  // const todayStartOfTheDay = today.startOf("day");
-  // const dispatch = useDispatch();
 
   const handleOpen = () => {
     setOpen(true);

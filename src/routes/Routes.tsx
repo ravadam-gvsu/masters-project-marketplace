@@ -6,7 +6,6 @@ import SignUp from "../components/signup/SignUp";
 import Profile from "../components/profile";
 import LayoutPage from "../pages/Layout";
 import CheckoutSuccess from "../components/cart/CheckoutSuccess";
-import Product from "../views/products";
 import { Dashboard } from "../components/dashboard/Dashboard";
 
 const Router = () => (
@@ -15,9 +14,9 @@ const Router = () => (
       <Routes>
         <Route path="/" element={<LayoutPage />} >
           <Route index element={<Dashboard />} />
-          <Route path={routes.home.baseurl} element={<Dashboard />} />,
+          <Route path={routes.home} element={<Dashboard />} />,
           <Route path={routes.checkoutSuccess} element={<CheckoutSuccess />} />
-          <Route path={routes.product} element={<Product />} />
+          <Route path={routes.product} element={<Dashboard />} />
           <Route path={routes.viewProduct} element={<ProductDetails />} />
           <Route path={routes.profile} element={<Profile />} />
           <Route path={routes.lostnfound} element={<Profile />} />

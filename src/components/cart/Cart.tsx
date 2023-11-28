@@ -16,15 +16,9 @@ import {
   RemoveCircleOutlineRounded,
   Close,
 } from "@mui/icons-material";
-import { useUIContext } from "../../common/context/context";
+import { useUIContext } from "../../hooks/context";
 import CheckoutButton from "./CheckoutButton";
 import { calculateTotal, displayMoney } from "../../utility/commonUtility";
-import { useDispatch } from "react-redux";
-import {
-  addQtyItem,
-  minusQtyItem,
-  removeFromCart,
-} from "../../redux/actions/cart";
 
 const useStyles = () => ({
   cartHeader: {
@@ -75,7 +69,6 @@ const useStyles = () => ({
 
 export const Cart = () => {
   const classes = useStyles();
-  // const dispatch = useDispatch();
   const { cart, setCart, showCart, setShowCart, addToCart, reduceFromCart, trashFromCart } =
     useUIContext();
 
@@ -83,51 +76,6 @@ export const Cart = () => {
   console.log("cart details", cart);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down("md"));
-
-  const onAddQty = (product: any) => {
-    if (product.quantity < product.maxQuantity) {
-      setCart((items) =>
-        items.map((item: any) => {
-          if (product.id === item.id) {
-            return {
-              ...product,
-              quantity: product.quantity + 1,
-            };
-          }
-          return product;
-        })
-      );
-    }
-  };
-
-  const onMinusQty = (product: any) => {
-    if (product.maxQuantity >= product.quantity && product.quantity !== 0) {
-      setCart((items) =>
-        items.map((item: any) => {
-          if (product.id === item.id) {
-            return {
-              ...product,
-              quantity: product.quantity - 1,
-            };
-          }
-          return product;
-        })
-      );
-    }
-    // dispatch(minusQtyItem(product.id));
-  };
-
-  const removeItem = (id: any) => {
-    setCart(cart.filter((item: any) => item.id !== id));
-    // dispatch(removeFromCart(id));
-
-    // setCart(cart.filter((item: any) => item.id !== id));
-  };
-
-  // const moveToWishlist = (product: any) => {
-  //   setWishlist([...wishlist, product]);
-  //   removeItem(product.id);
-  // };
 
   const cartEmptyContent = (
     <>

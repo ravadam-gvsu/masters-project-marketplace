@@ -4,12 +4,7 @@ const routes = {
     profile: "/profile",
     lostnfound: "/lostnfound",
     product: "/product",
-    home: {
-      baseurl: "/home",
-      product: {
-        baseurl: "/product",
-      },
-    },
+    home: "/",
     checkoutSuccess: "/checkoutSuccess",
     viewProduct: "/viewProduct/:id"
   };

@@ -3,9 +3,10 @@ import { Provider } from "react-redux";
 import Routes from "./routes/Routes";
 import { BrowserRouter } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
-import { UIProvider } from "./common/context/context";
+import { UIProvider } from "./hooks/context";
 import { PersistGate } from "redux-persist/integration/react";
 import "./App.scss";
+import { SnackBarProvider } from "./common/components/SnackBarProvider";
 
 // function App({ store, persistor }: any) {
 //   return (
@@ -24,10 +25,12 @@ import "./App.scss";
 
 const App = () => (
   <StrictMode>
-    <UIProvider>
-      <CssBaseline />
-      <Routes />
-    </UIProvider>
+    <SnackBarProvider>
+      <UIProvider>
+        <CssBaseline />
+        <Routes />
+      </UIProvider>
+    </SnackBarProvider>
   </StrictMode>
 );
 

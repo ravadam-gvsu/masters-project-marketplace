@@ -22,10 +22,8 @@ import { signIn } from "../../services/firebaseapi";
 import routes from "../../constants/routes";
 import { useNavigate } from "react-router-dom";
 import AppLoader from "../../common/components/AppLoader";
-
-import SignUp from "../signup/SignUp";
-import CommonToast from "../../common/components/CommonToast";
-import { useUIContext } from "../../common/context/context";
+import { useSnackBar } from "../../common/components/SnackBarProvider";
+import { withStyles } from "@mui/styles";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -50,8 +48,7 @@ const styles = (theme: any) => ({
   loginContainer: {
     height: "100vh",
     color: "#ffffff",
-    background:
-      "url(assets/banner.png) 50% center / cover no-repeat fixed",
+    background: "url(assets/banner.png) 50% center / cover no-repeat fixed",
   },
   loginPanel: {
     backgroundColor: "rgba(0, 0, 0, 0.5)", // "#00000870",
@@ -86,9 +83,24 @@ const styles = (theme: any) => ({
   pointer: {
     cursor: "pointer",
   },
-  enrollFormContrl: {
+  displayCenter: {
+    display: "flex",
+    // flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  }
+});
+
+const CssTextField = withStyles({
+  root: {
+    '& label.Mui-focused': {
+      color: 'white',
+    },
     "& .MuiInput-underline:before": {
       borderBottom: `1px solid '#ffffff'`,
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'yellow',
     },
     "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
       borderBottom: "2px solid #fffffa",
@@ -104,8 +116,19 @@ const styles = (theme: any) => ({
       fontSize: "14px",
       fontWeight: "normal",
     },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white',
+      },
+      '&:hover fieldset': {
+        borderColor: 'white',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'yellow',
+      },
+    },
   },
-});
+})(TextField);
 
 export const Login = () => {
   const classes = styles(theme);
@@ -113,6 +136,7 @@ export const Login = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const { showSnackBar } = useSnackBar();
 
   let navigate = useNavigate();
 
@@ -144,21 +168,14 @@ export const Login = () => {
     await signIn(user.email, user.password)
       .then((res: any) => {
         if (res.user) {
-          let path = routes.home.baseurl;
+          let path = routes.home;
           navigate(path);
         } else {
-          //   this.props.handleShowToast({
-          //     type: "error",
-          //     message: "Please enter correct email and password!",
-          //   });
+          showSnackBar("Please enter correct email and password!", "error");
         }
       })
       .catch((err: any) => {
-        // this.props.handleShowToast({
-        //   type: "error",
-        //   message: err,
-        // });
-        console.log(err);
+        showSnackBar(err.message, "error");
       });
 
     setSubmitting(false);
@@ -168,13 +185,6 @@ export const Login = () => {
   const handleClickShowPassword = (value: string) => {
     setShowPassword(!showPassword);
   };
-
-  //   render() {
-  // const { isLogin, showPassword, showLoader } = this.state;
-
-  // const { classes } = this.props;
-
-  console.log("login screen classes", classes);
 
   return (
     <Grid
@@ -211,11 +221,11 @@ export const Login = () => {
                     onSubmit={onSubmit}
                   >
                     {({ submitForm, isValid }) => (
-                      <Form>
-                        <Grid item xs={12} sx={classes.enrollFormContrl}>
-                          <Box maxWidth="75%" p={2}>
+                      <Form style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                        {/* <Grid item xs={12}> */}
+                          <Box width="75%" p={2}>
                             <Field
-                              component={TextField}
+                              component={CssTextField}
                               fullWidth
                               id="emailId"
                               placeholder="Enter Email Address"
@@ -225,7 +235,7 @@ export const Login = () => {
                               InputProps={{
                                 startAdornment: (
                                   <InputAdornment position="start">
-                                    <AccountCircle sx={classes.whiteText}/>
+                                    <AccountCircle sx={classes.whiteText} />
                                   </InputAdornment>
                                 ),
                               }}
@@ -233,17 +243,16 @@ export const Login = () => {
                               variant="outlined"
                             />
                           </Box>
-                        </Grid>
+                        {/* </Grid> */}
 
-                        <Grid
+                        {/* <Grid
                           item
                           xs={12}
-                          sx={classes.enrollFormContrl}
                           textAlign={"center"}
-                        >
-                          <Box maxWidth="75%" p={2}>
+                        > */}
+                          <Box width="75%" p={2}>
                             <Field
-                              component={TextField}
+                              component={CssTextField}
                               id="password"
                               placeholder="Enter Password"
                               type={showPassword ? "text" : "password"}
@@ -253,7 +262,7 @@ export const Login = () => {
                               InputProps={{
                                 startAdornment: (
                                   <InputAdornment position="start">
-                                    <VpnKey  sx={classes.whiteText}/>
+                                    <VpnKey sx={classes.whiteText} />
                                   </InputAdornment>
                                 ),
                                 endAdornment: (
@@ -276,7 +285,7 @@ export const Login = () => {
                               variant="outlined"
                             />
                           </Box>
-                        </Grid>
+                        {/* </Grid> */}
 
                         <Grid item xs={12} textAlign={"center"}>
                           <Box maxWidth="75%" m={4}>

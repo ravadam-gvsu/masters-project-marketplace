@@ -1,7 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
-import { app } from "../auth/firebase-init";
-import { getUser } from "../../services/firebaseapi";
+import { app } from "../common/auth/firebase-init";
+import { getUser } from "../services/firebaseapi";
 
 export const UIContext = createContext<any>({});
 export const useUIContext = () => useContext(UIContext);

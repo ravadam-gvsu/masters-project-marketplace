@@ -12,7 +12,7 @@ const LayoutPage = () => {
           <Grid item xs={12}>
             <Navbar />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{marginTop: "120px"}}>
             <Outlet></Outlet>
           </Grid>
         </Grid>

@@ -1,61 +1,67 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Typography } from "@mui/material";
-import { ProductCard } from "../../../../common/components/ProductCard";
-import AppLoader from "../../../../common/components/AppLoader";
-import _get from "lodash/get";
-import { useUIContext } from "../../../../common/context/context";
+import { Box, Grid, IconButton } from "@mui/material";
+import { useUIContext } from "../../../../hooks/context";
 import Gallery from "./Gallery";
 import Description from "./Description";
-import { useParams } from "react-router-dom";
-import useProduct from "../../../../hooks/useProduct";
+import { useNavigate, useParams } from "react-router-dom";
 import { getSingleProduct } from "../../../../services/firebaseapi";
+import { ArrowBack } from "@mui/icons-material";
 
 export const ProductDetails = () => {
   const { id } = useParams();
-  // const { product, isLoading, error } = useProduct(id);
+  const navigate = useNavigate();
   const [product, setProduct] = useState();
-  const [products, setProducts] = useState([]);
-  const [loader, setLoader] = useState(false);
-  const { cart, setCart } = useUIContext();
-  const [quant, setQuant] = useState(0);
-  const [orderedQuant, setOrderedQuant] = useState(0);
-  // const addToCartItems = (product: any) => {
-  //   setCart([...cart, product]);
-  // };
+  const { cart, setCart, addToCart, reduceFromCart } = useUIContext();
 
+  const orderQuant = cart.find(prod => prod.id === id);
   useEffect(() => {
     if (id) {
       getSingleProduct(id).then((pd) => setProduct(pd as any));
     }
   }, [id]);
 
-  const addQuant = () => {
-    setQuant(quant + 1);
-  };
-
-  const removeQuant = () => {
-    setQuant(quant - 1);
-  };
-
-  const resetQuant = () => {
-    setQuant(0);
-    setOrderedQuant(0);
+  const backToProducts = () => {
+    navigate("/");
   };
 
   return (
-    <section className="core">
-      {product && (
-        <>
-          <Gallery product={product} />
-          <Description
-            product={product}
-            onQuant={quant}
-            onAdd={addQuant}
-            onRemove={removeQuant}
-            onSetOrderedQuant={setOrderedQuant}
-          />
-        </>
-      )}
-    </section>
+    <Grid
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Box
+        sx={{
+          width: "50%",
+          flexDirection: "column",
+        }}
+      >
+        <IconButton style={{ margin: "10px" }} onClick={backToProducts}>
+          <ArrowBack />
+          {"Back to Products"}
+        </IconButton>
+        <section
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {product && (
+            <>
+              <Gallery product={product} />
+              <Description
+                product={product}
+                onQuant={orderQuant?.quantity || 0}
+                onAdd={() => addToCart(product)}
+                onRemove={() => reduceFromCart(product)}
+              />
+            </>
+          )}
+        </section>
+      </Box>
+    </Grid>
   );
 };

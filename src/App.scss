@@ -40,8 +40,8 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap");
 :root {
-  --orange: hsl(245, 82%, 39%);
-  --pale-orange: hsl(250, 50%, 44%);
+  --orange: rgb(66, 165, 245);
+  --pale-orange: rgb(117, 183, 238);
   --vd-blue: hsl(218, 78%, 29%);
   --d-grayish-blue: rgb(104, 112, 125);
   --grayish-blue: hsl(220, 14%, 75%);
@@ -148,7 +148,7 @@
 
 
 .description {
-  flex-basis: 50%;
+  margin: 50px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -302,7 +302,7 @@
   gap: 15px;
   // flex: 1;
   transition: 0.3s;
-  box-shadow: 0px 30px 20px -8px var(--pale-orange);
+  box-shadow: 0px 10px 20px -8px var(--pale-orange);
 }
 @media (max-width: 992px) {
   .description .buttons .add-to-cart {
@@ -414,4 +414,92 @@
 .MuiBadge-standard {
   font-family: inherit;
   font-weight: 700;
+}
+
+$z-index: (
+	toast: 100,
+	modal: 80,
+  basket: 60,
+  navigation: 55,
+  filter: 40,
+  search: 30,
+  content: 10,
+);
+
+.navigation {
+  width: 100%;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  padding: .5rem 3rem;
+  position: absolute;
+  top: 0;
+  transform: translateY(0);
+  z-index: map-get($z-index, navigation);
+  box-shadow: none;
+
+  .logo {
+    margin-right: 2rem;
+  }
+
+  .logo img {
+    width: 15rem;
+    height: inherit;
+    object-fit: contain;
+  }
+
+  .logo a {
+    display: block;
+    height: 100%;
+  }
+
+  .searchbar {
+    width: 300px;
+  }
+}
+
+.navigation-menu-main {
+  padding-left: 0;
+  margin-right: 2rem;
+  flex-grow: 1;
+
+  li {
+    display: inline-block;
+    
+    a {
+      padding: 10px 15px;
+      font-size: 1.4rem;
+      text-decoration: none;
+    }
+  }
+}
+
+.navigation-menu-active {
+  font-weight: bold;
+  opacity: 1 !important;
+}
+
+.navigation-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+  margin: 0;
+  text-align: right;
+}
+
+.navigation-menu-item {
+  display: inline-block;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activeNav {
+  color: white;
+}
+
+.inactiveNav {
+  color: white;
+  opacity: .5;
 }

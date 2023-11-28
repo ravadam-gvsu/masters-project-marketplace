@@ -6,8 +6,7 @@ const Description = ({
   product,
   onQuant,
   onAdd,
-  onRemove,
-  onSetOrderedQuant,
+  onRemove
 }: any) => {
   console.log("product details", product);
   return (
@@ -23,9 +22,7 @@ const Description = ({
         <QuantityButton onQuant={onQuant} onRemove={onRemove} onAdd={onAdd} />
         <Button
           className="add-to-cart"
-          onClick={() => {
-            onSetOrderedQuant(onQuant);
-          }}
+          onClick={onAdd}
         >
           <ShoppingCart />
           add to cart

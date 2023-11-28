@@ -26,7 +26,7 @@ import {
 import { createTheme } from "@mui/material/styles";
 import Carousel from "./ImageCarousel";
 import { useNavigate } from "react-router-dom";
-import { useUIContext } from "../context/context";
+import { useUIContext } from "../../hooks/context";
 
 const theme = createTheme({
   palette: {

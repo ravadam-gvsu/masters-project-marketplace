@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -29,8 +29,8 @@ import {
 } from "@mui/icons-material";
 import { Sidebar } from "./Sidebar";
 import constants from "../../../../constants/validators";
-import { useNavigate } from "react-router-dom";
-import { useUIContext } from "../../../../common/context/context";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useUIContext } from "../../../../hooks/context";
 import routes from "../../../../constants/routes";
 
 const theme = createTheme();
@@ -115,7 +115,7 @@ const useStyles = (theme: any) => ({
 });
 
 const pages = [
-  { name: "Products", path: routes.home.product.baseurl },
+  { name: "Products", path: routes.home },
   { name: "Lost & Found", path: routes.profile },
 ];
 
@@ -235,103 +235,196 @@ export const Navbar = () => {
     </Menu>
   );
 
+  // return (
+  //   <Box sx={classes.grow}>
+  //     <AppBar position="static" sx={classes.bgColor}>
+  //       {/* <Container maxWidth="xl"> */}
+  //       <Toolbar>
+  //         {/* <IconButton
+  //             edge="start"
+  //             sx={classes.menuButton}
+  //             color="inherit"
+  //             aria-label="open drawer"
+  //             onClick={() => handleDrawer(true)}
+  //           >
+  //             <MenuIcon />
+  //           </IconButton> */}
+  //         <IconButton onClick={goToDashboard}>
+  //           <Storefront sx={classes.textWhite} />
+  //         </IconButton>
+
+  //         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+  //           {pages.map((page) => (
+  //             <Button
+  //               key={page.name}
+  //               onClick={() => handleNavMenu(page)}
+  //               sx={{ my: 2, color: "white", display: "block" }}
+  //             >
+  //               {page.name}
+  //             </Button>
+  //           ))}
+  //         </Box>
+
+  //         <Box sx={classes.grow} />
+  //         <Box sx={classes.search}>
+  //           <InputBase
+  //             placeholder="Search…"
+  //             sx={{ root: classes.inputRoot, input: classes.inputInput }}
+  //             endAdornment={
+  //               <IconButton color="inherit">
+  //                 <Search sx={classes.textWhite} />
+  //               </IconButton>
+  //             }
+  //             inputProps={{ "aria-label": "search" }}
+  //           />
+  //         </Box>
+  //         <Box sx={classes.sectionDesktop}>
+  //           <Grid container spacing={3}>
+  //             <Grid item>
+  //               <IconButton
+  //                 edge="end"
+  //                 aria-label="cart"
+  //                 aria-controls={menuId}
+  //                 aria-haspopup="true"
+  //                 color="inherit"
+  //                 onClick={() => {
+  //                   setShowCart(true);
+  //                 }}
+  //               >
+  //                 <StyledBadge badgeContent={cart?.length} color="secondary">
+  //                   <ShoppingCart />
+  //                 </StyledBadge>
+  //               </IconButton>
+  //             </Grid>
+  //             <Grid item>
+  //               {/* <IconButton
+  //                   edge="end"
+  //                   aria-label="account of current user"
+  //                   aria-controls={menuId}
+  //                   aria-haspopup="true"
+  //                   onClick={handleProfileMenuOpen}
+  //                   color="inherit"
+  //                 >
+  //                   <AccountCircle />
+  //                 </IconButton> */}
+  //             </Grid>
+  //           </Grid>
+  //         </Box>
+  //         <Box>
+  //           <IconButton
+  //             aria-label="account of current user"
+  //             aria-controls={mobileMenuId}
+  //             aria-haspopup="true"
+  //             onClick={handleMobileMenuOpen}
+  //             color="inherit"
+  //           >
+  //             <AccountCircle />
+  //           </IconButton>
+  //         </Box>
+  //       </Toolbar>
+  //       {/* </Container> */}
+  //     </AppBar>
+  //     {/* <Sidebar
+  //       isOpen={openDrawer}
+  //       history={props.history}
+  //       handleDrawer={handleDrawer}
+  //     /> */}
+  //     {renderMobileMenu}
+  //     {renderMenu}
+  //   </Box>
+  // );
+
+  const navbar = useRef(null);
+  
   return (
-    <Box sx={classes.grow}>
-      <AppBar position="static" sx={classes.bgColor}>
-        {/* <Container maxWidth="xl"> */}
-        <Toolbar>
-          {/* <IconButton
-              edge="start"
-              sx={classes.menuButton}
-              color="inherit"
-              aria-label="open drawer"
-              onClick={() => handleDrawer(true)}
-            >
-              <MenuIcon />
-            </IconButton> */}
-          <IconButton onClick={goToDashboard}>
-            <Storefront sx={classes.textWhite} />
-          </IconButton>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.name}
-                onClick={() => handleNavMenu(page)}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page.name}
-              </Button>
-            ))}
-          </Box>
-
-          <Box sx={classes.grow} />
-          <Box sx={classes.search}>
-            <InputBase
-              placeholder="Search…"
-              sx={{ root: classes.inputRoot, input: classes.inputInput }}
-              endAdornment={
-                <IconButton color="inherit">
-                  <Search sx={classes.textWhite} />
-                </IconButton>
+    <nav className="navigation" style={classes.bgColor} ref={navbar}>
+      <div className="logo">
+        {/* <Link onClick={goToDashboard} to="/"> */}
+        <Storefront sx={classes.textWhite} />
+        {/* </Link> */}
+      </div>
+      <ul className="navigation-menu-main">
+        {pages.map((page) => (
+          <li key={page.name}>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                isPending ? "pending" : isActive ? "activeNav" : "inactiveNav"
               }
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Box>
-          <Box sx={classes.sectionDesktop}>
-            <Grid container spacing={3}>
-              <Grid item>
-                <IconButton
-                  edge="end"
-                  aria-label="cart"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  color="inherit"
-                  onClick={() => {
-                    setShowCart(true);
-                  }}
-                >
-                  <StyledBadge badgeContent={cart?.length} color="secondary">
-                    <ShoppingCart />
-                  </StyledBadge>
-                </IconButton>
-              </Grid>
-              <Grid item>
-                {/* <IconButton
-                    edge="end"
-                    aria-label="account of current user"
-                    aria-controls={menuId}
-                    aria-haspopup="true"
-                    onClick={handleProfileMenuOpen}
-                    color="inherit"
-                  >
-                    <AccountCircle />
-                  </IconButton> */}
-              </Grid>
-            </Grid>
-          </Box>
-          <Box>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
+              to={page.path}
             >
-              <AccountCircle />
+              {page.name}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+
+      <Box sx={classes.search}>
+        <InputBase
+          placeholder="Search…"
+          sx={{ root: classes.inputRoot, input: classes.inputInput }}
+          endAdornment={
+            <IconButton color="inherit">
+              <Search sx={classes.textWhite} />
             </IconButton>
-          </Box>
-        </Toolbar>
-        {/* </Container> */}
-      </AppBar>
-      {/* <Sidebar
-        isOpen={openDrawer}
-        history={props.history}
-        handleDrawer={handleDrawer}
-      /> */}
-      {renderMobileMenu}
-      {renderMenu}
-    </Box>
+          }
+          inputProps={{ "aria-label": "search" }}
+        />
+      </Box>
+
+      {/* <Box sx={classes.sectionDesktop}>
+        <Grid container spacing={3}>
+          <Grid item>
+            <IconButton
+              edge="end"
+              aria-label="cart"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              color="inherit"
+              onClick={() => {
+                setShowCart(true);
+              }}
+            >
+              <StyledBadge badgeContent={cart?.length} color="secondary">
+                <ShoppingCart />
+              </StyledBadge>
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Box> */}
+
+      <ul className="navigation-menu">
+        <li className="navigation-menu-item">
+          <IconButton
+            edge="end"
+            aria-label="cart"
+            aria-controls={menuId}
+            aria-haspopup="true"
+            color="inherit"
+            onClick={() => {
+              setShowCart(true);
+            }}
+          >
+            <StyledBadge badgeContent={cart?.length} color="secondary">
+              <ShoppingCart sx={classes.textWhite}/>
+            </StyledBadge>
+          </IconButton>
+        </li>
+
+        <li className="navigation-menu-item">
+          <IconButton
+            aria-label="account of current user"
+            aria-controls={mobileMenuId}
+            aria-haspopup="true"
+            onClick={handleMobileMenuOpen}
+            color="inherit"
+          >
+            <AccountCircle sx={classes.textWhite}/>
+          </IconButton>
+        </li>
+        {renderMobileMenu}
+        {renderMenu}
+      </ul>
+    </nav>
   );
 };
 
