@@ -1,6 +1,7 @@
 import { ShoppingCart } from "@mui/icons-material";
 import QuantityButton from "./QuantityButton";
 import { Button } from "@mui/material";
+import React  from 'react';
 
 const Description = ({
   product,
