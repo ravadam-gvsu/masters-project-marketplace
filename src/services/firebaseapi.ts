@@ -237,6 +237,7 @@ import { Buffer } from "buffer";
 import { setSessionData } from "../utility/commonUtility";
 import { uuidv4 } from "../utility/uuid";
 import { getBlob } from "../utility/blobUtil";
+import { fuzzSearch } from "./fuzzySearch";
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
@@ -298,7 +299,7 @@ export const updateEmail = (currentPassword, newEmail) =>
     });
 
 export const updateProfile = (id, updates) =>
-    updateDoc(doc(db, "users", id), { updates });
+    updateDoc(doc(db, "users", id), updates);
 
 export const onStateChanged = () =>
     new Promise((resolve, reject) => {
@@ -321,7 +322,7 @@ export const setAuthPersistence = () =>
 
 export const getSingleProduct = async (id) => {
     const product = await getDoc(doc(db, "products", id));
-    return { id: product.id, ...product.data()};
+    return { id: product.id, ...product.data() };
 };
 
 export const getProducts = (lastRefKey: any = "") => {
@@ -376,9 +377,69 @@ export const getProducts = (lastRefKey: any = "") => {
     });
 };
 
-export const searchProducts = (searchKey) => {
+export const getItems = (lastRefKey: any = "") => {
     let didTimeout = false;
 
+    return new Promise((resolve, reject) => {
+        (async () => {
+            if (lastRefKey) {
+                try {
+                    const queryRef = collection(db, "items");
+                    const queryRes = query(queryRef, orderBy(documentId()), startAfter(lastRefKey), limit(12));
+
+                    const snapshot = await getDocs(queryRes);
+                    const items: any = [];
+                    snapshot.forEach((doc: any) =>
+                        items.push({ id: doc.id, ...doc.data() })
+                    );
+                    const lastKey = snapshot.docs[snapshot.docs.length - 1];
+
+                    resolve({ items, lastKey });
+                } catch (e: any) {
+                    reject(e?.message || ":( Failed to fetch items.");
+                }
+            } else {
+                const timeout = setTimeout(() => {
+                    didTimeout = true;
+                    reject(new Error("Request timeout, please try again"));
+                }, 15000);
+
+                try {
+                    const totalQuery = collection(db, "items");
+                    const total = 10;
+                    const queryRes = query(totalQuery, orderBy(documentId()), limit(12));
+                    const snapshot = await getDocs(queryRes);
+
+                    clearTimeout(timeout);
+                    if (!didTimeout) {
+                        const items: any = [];
+                        snapshot.forEach((doc: any) =>
+                            items.push({ id: doc.id, ...doc.data() })
+                        );
+                        const lastKey = snapshot.docs[snapshot.docs.length - 1];
+
+                        resolve({ items, lastKey, total });
+                    }
+                } catch (e: any) {
+                    if (didTimeout) return;
+                    reject(e?.message || ":( Failed to fetch items.");
+                }
+            }
+        })();
+    });
+};
+
+export const searchProductsService = async (searchKey: string) => {
+    const productResults = await getProducts() as any;
+    const searchedResults = fuzzSearch(productResults.products, 'productTitle', searchKey);
+    productResults.products = searchedResults;
+    productResults.total = searchedResults.length || 0;
+    return productResults;
+}
+
+export const searchProductsMod = (searchKey) => {
+    let didTimeout = false;
+    searchKey = searchKey.toLocaleLowerCase();
     return new Promise((resolve, reject) => {
         (async () => {
             const productsRef: any = collection(db, "products");
@@ -389,26 +450,26 @@ export const searchProducts = (searchKey) => {
             }, 15000);
 
             try {
-                const searchedNameRef = productsRef
-                    .orderBy("name_lower")
-                    .where("name_lower", ">=", searchKey)
-                    .where("name_lower", "<=", `${searchKey}\uf8ff`)
-                    .limit(12);
-                const searchedKeywordsRef = productsRef
-                    .orderBy("dateAdded", "desc")
-                    .where("keywords", "array-contains-any", searchKey.split(" "))
-                    .limit(12);
+                const searchedNameRef = query(productsRef,
+                    orderBy("name_lower"),
+                    where("name_lower", ">=", searchKey),
+                    where("name_lower", "<=", `${searchKey}\uf8ff`),
+                    limit(12));
+                const searchedKeywordsRef = query(productsRef,
+                    orderBy("dateAdded", "desc"),
+                    where("keywords", "array-contains-any", searchKey.split(" ")),
+                    limit(12));
 
                 // const totalResult = await totalQueryRef.get();
-                const nameSnaps = await searchedNameRef.get();
-                const keywordsSnaps = await searchedKeywordsRef.get();
+                const nameSnaps = await getDocs(searchedNameRef);
+                const keywordsSnaps = await getDocs(searchedKeywordsRef);
                 // const total = totalResult.docs.length;
 
                 clearTimeout(timeout);
                 if (!didTimeout) {
                     const searchedNameProducts: any = [];
                     const searchedKeywordsProducts: any = [];
-                    let lastKey = null;
+                    let lastKey;
 
                     if (!nameSnaps.empty) {
                         nameSnaps.forEach((doc: any) => {
@@ -418,7 +479,7 @@ export const searchProducts = (searchKey) => {
                     }
 
                     if (!keywordsSnaps.empty) {
-                        keywordsSnaps.forEach((doc) => {
+                        keywordsSnaps.forEach((doc: any) => {
                             searchedKeywordsProducts.push({ id: doc.id, ...doc.data() });
                         });
                     }
@@ -444,6 +505,8 @@ export const searchProducts = (searchKey) => {
     });
 };
 
+(window as any).searchProductsMod = searchProductsMod;
+
 export const storeImage = async (imageFile) => {
     const storageRef = await ref(storage, uuidv4());
     const snapshot = await uploadBytes(storageRef, imageFile);
@@ -456,6 +519,8 @@ export const saveProduct = async (id, product) => {
     productImages = productImages ? [...productImages] : [];
     const allImages$ = productImages.map(storeImage)
     const uploadedImages = await Promise.all(allImages$);
+    const name_lower = product.productTitle.toLocaleLowerCase();
+    const keywords = name_lower.split(' ');
     const dataToSave = {
         ...payload,
         images: uploadedImages,
@@ -475,8 +540,19 @@ export const editProduct = (id, updates) =>
 
 export const removeProduct = (id) => deleteDoc(doc(db, "products", id));
 
-export const saveItem = (id, product) =>
-    setDoc(doc(db, 'products', id), product);
+export const saveItem = async (id, product) => {
+    let { itemImage, itemImages, ...payload } = product;
+    itemImages = itemImages ? [...itemImages] : [];
+    const allImages$ = itemImages.map(storeImage)
+    const uploadedImages = await Promise.all(allImages$);
+    const dataToSave = {
+        ...payload,
+        images: uploadedImages,
+        claimStatus: false,
+        postedOn: Date.now(),
+    }
+    return setDoc(doc(db, 'items', id), dataToSave);
+}
 
 export const addChatsToFirestore = async (conversationId, user1Id, user2Id) => {
     const docRef = doc(db, "usersChats", conversationId);

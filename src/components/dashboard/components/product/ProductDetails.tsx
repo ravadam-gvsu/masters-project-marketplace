@@ -13,7 +13,7 @@ export const ProductDetails = () => {
   const [product, setProduct] = useState();
   const { cart, setCart, addToCart, reduceFromCart } = useUIContext();
 
-  const orderQuant = cart.find(prod => prod.id === id);
+  const orderQuant = cart.find((prod) => prod.id === id);
   useEffect(() => {
     if (id) {
       getSingleProduct(id).then((pd) => setProduct(pd as any));
@@ -38,9 +38,12 @@ export const ProductDetails = () => {
           flexDirection: "column",
         }}
       >
-        <IconButton style={{ margin: "10px" }} onClick={backToProducts}>
-          <ArrowBack />
-          {"Back to Products"}
+        <IconButton
+          style={{ margin: "10px", background: "none" }}
+          onClick={backToProducts}
+        >
+          <ArrowBack style={{ marginRight: "10px" }} />
+          {" Back to Products"}
         </IconButton>
         <section
           style={{

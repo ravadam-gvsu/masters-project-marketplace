@@ -7,6 +7,8 @@ import Profile from "../components/profile";
 import LayoutPage from "../pages/Layout";
 import CheckoutSuccess from "../components/cart/CheckoutSuccess";
 import { Dashboard } from "../components/dashboard/Dashboard";
+import { Item } from "../components/lostnfound/item";
+import ConversationPage from "../components/lostnfound/chats/conversations";
 
 const Router = () => (
   <BrowserRouter>
@@ -19,7 +21,9 @@ const Router = () => (
           <Route path={routes.product} element={<Dashboard />} />
           <Route path={routes.viewProduct} element={<ProductDetails />} />
           <Route path={routes.profile} element={<Profile />} />
-          <Route path={routes.lostnfound} element={<Profile />} />
+          <Route path={routes.lostnfound} element={<Item />} />
+          <Route path="/conversation/:itemOwnerId" element={<ConversationPage />}
+        />
         </Route>
         <Route path={routes.login} element={<Login />} />
         <Route path={routes.customerRegistration} element={<SignUp />} />

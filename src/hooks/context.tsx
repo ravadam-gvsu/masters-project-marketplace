@@ -1,7 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { app } from "../common/auth/firebase-init";
-import { getUser } from "../services/firebaseapi";
+import { getUser, searchProductsMod, updateProfile } from "../services/firebaseapi";
 
 export const UIContext = createContext<any>({});
 export const useUIContext = () => useContext(UIContext);
@@ -19,6 +19,14 @@ export const UIProvider = ({ children }: any) => {
   const [productsCollection, setProducts] = useState({
     products: []
   });
+  const [itemsCollection, setItems] = useState({
+    items: []
+  });
+
+  const updateCart = (newCart:any[]) => {
+    setCart(newCart as any);
+    updateProfile((userDetails as any).user.id, { cart: newCart });
+  }
 
   const isItemOnCart = (id: any) => {
     return cart.some((item:any) => item.id === id);
@@ -28,9 +36,9 @@ export const UIProvider = ({ children }: any) => {
     const cartItem:any = cart.find((item:any) => item.id === product.id);
     if (cartItem) {
       cartItem.quantity += 1;
-      setCart([...cart]);
+      updateCart([...cart]);
     } else {
-      setCart([...cart, product] as any);
+      updateCart([...cart, product] as any);
     }
   };
 
@@ -38,19 +46,28 @@ export const UIProvider = ({ children }: any) => {
     const cartItem:any = cart.find((item:any) => item.id === product.id);
     if (cartItem) {
       cartItem.quantity -= 1;
-      setCart([...cart]);
+      updateCart([...cart]);
     }
   };
 
   const trashFromCart = (product) => {
-    setCart(cart.filter((item: any) => item.id !== product.id));
+    updateCart(cart.filter((item: any) => item.id !== product.id));
   };
+
+  const clearCart = () => updateCart([]);
+
+
+  const searchProducts = async (key) => {
+    const products = await searchProductsMod(key);
+    setProducts(products as any);
+  }
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
         getUser(user.uid).then((userDetails: any) => {
-          setUserDetails(userDetails.data());
+          setUserDetails( { user: {id: user.uid, ...userDetails.data().user} });
+          setCart(userDetails.data().cart || []);
         });
       }
     });
@@ -73,11 +90,15 @@ export const UIProvider = ({ children }: any) => {
         setShowWishlist,
         productsCollection,
         setProducts,
+        itemsCollection,
+        setItems,
         userDetails,
         isItemOnCart,
         addToCart,
         reduceFromCart,
-        trashFromCart
+        trashFromCart,
+        clearCart,
+        searchProducts
       }}
     >
       {children}

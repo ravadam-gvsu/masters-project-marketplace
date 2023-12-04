@@ -39,6 +39,9 @@ import Map from "../../common/components/MapLocationPicker";
 import { locationsMap, pickupLocations } from "./Constants";
 import { useUIContext } from "../../hooks/context";
 import { generateKey, saveItem, saveProduct } from "../../services/firebaseapi";
+import { useSnackBar } from "../../common/components/SnackBarProvider";
+import { useNavigate } from "react-router-dom";
+import routes from "../../constants/routes";
 
 export const Profile = () => {
   const key: string = "AIzaSyD-xBLLTuMQU7LTtB9_q8kw5wtfVbEcnF8";
@@ -47,6 +50,8 @@ export const Profile = () => {
   );
   const [open, setOpen] = useState(false);
   const { userDetails } = useUIContext();
+  const { showSnackBar } = useSnackBar();
+  const navigate = useNavigate();
 
   const today = dayjs().format("MM/DD/YYYY");
   const yesterday = dayjs().subtract(1, "day");
@@ -128,10 +133,28 @@ export const Profile = () => {
           state: "",
           city: "",
         },
-        sellerName: details.sellerName,
+        sellerDetails: {
+          name:
+            userDetails.user &&
+            `${userDetails.user["firstName"]} ${userDetails.user["lastName"]}`,
+          id: userDetails.user && `${userDetails.user["uid"]}`,
+        },
         quantity: details.quantity,
       };
-      saveProduct(key, payload);
+
+      await saveProduct(key, payload)
+        .then((res: any) => {
+          if (res.user) {
+            showSnackBar("Product saved successfully!", "success");
+            let path = routes.product;
+            navigate(path);
+          } else {
+            showSnackBar("Error saving product!", "error");
+          }
+        })
+        .catch((err: any) => {
+          showSnackBar(err.message, "error");
+        });
     } else {
       const payload = {
         status: details.status,
@@ -140,10 +163,23 @@ export const Profile = () => {
         picklocation: details.picklocation,
         coordinates: locationsMap[details.picklocation],
         itemImage: details.itemImage,
+        itemImages: details.itemImages,
         description: details.description,
         category: details.category,
       };
-      saveItem(key, payload);
+      await saveItem(key, payload)
+        .then((res: any) => {
+          if (res.user) {
+            showSnackBar("Item saved successfully!", "success");
+            let path = routes.lostnfound;
+            navigate(path);
+          } else {
+            showSnackBar("Error saving item!", "error");
+          }
+        })
+        .catch((err: any) => {
+          showSnackBar(err.message, "error");
+        });
     }
   };
 

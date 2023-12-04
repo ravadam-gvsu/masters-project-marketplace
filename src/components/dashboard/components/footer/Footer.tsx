@@ -33,7 +33,6 @@ export const Footer = () => {
           <Grid className={classes.mainText}>
             <Typography>Created by: Mounika Ravada</Typography>
           </Grid>
-          {/*<div className={classes.grow} />*/}
         </Toolbar>
       </AppBar>
     </React.Fragment>

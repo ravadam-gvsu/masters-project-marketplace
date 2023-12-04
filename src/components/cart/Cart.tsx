@@ -69,7 +69,7 @@ const useStyles = () => ({
 
 export const Cart = () => {
   const classes = useStyles();
-  const { cart, setCart, showCart, setShowCart, addToCart, reduceFromCart, trashFromCart } =
+  const { cart, clearCart, showCart, setShowCart, addToCart, reduceFromCart, trashFromCart } =
     useUIContext();
 
   console.log("setShowCart", showCart);
@@ -127,62 +127,6 @@ export const Cart = () => {
         </Box>
     ));
 
-  // const cartFilledContent = cart.map((item: any) => (
-  //   <>
-  //     <ListItem
-  //       key={item.id}
-  //       alignItems="flex-start"
-  //       sx={{ padding: "15px 0 30px 0" }}
-  //     >
-  //       <ListItemAvatar>
-  //         <Avatar
-  //           alt={item.productTitle}
-  //           src={item.images[0]}
-  //           sx={{ width: 90, height: 90, mr: 2 }}
-  //         />
-  //       </ListItemAvatar>
-  //       <ListItemText
-  //         primary={
-  //           <Typography variant="h4" fontSize="20px">
-  //             {item.productTitle}
-  //           </Typography>
-  //         }
-  //         secondary={
-  //           <>
-  //             <Typography variant="body1">{item.productDescription}</Typography>
-  //             <Typography variant="h6">{`$${item.sellingPrice}`}</Typography>
-  //           </>
-  //         }
-  //       />
-  //       <Stack direction="row">
-  //         <Toolbar
-  //           variant="dense"
-  //           sx={{
-  //             "&.MuiToolbar-root": {
-  //               padding: 0,
-  //             },
-  //             position: "absolute",
-  //             bottom: 0,
-  //             right: 0,
-  //           }}
-  //         >
-  //           <Tooltip title="Move to wishlist">
-  //             <IconButton onClick={() => moveToWishlist(item)}>
-  //               <Favorite />
-  //             </IconButton>
-  //           </Tooltip>
-  //           <Tooltip title="Remove from cart">
-  //             <IconButton onClick={() => removeItem(item.id)}>
-  //               <Delete />
-  //             </IconButton>
-  //           </Tooltip>
-  //         </Toolbar>
-  //       </Stack>
-  //     </ListItem>
-  //     <Divider variant="inset" component="li" />
-  //   </>
-  // ));
-
   return (
     <Drawer
       open={showCart}
@@ -219,7 +163,7 @@ export const Cart = () => {
                 <Button onClick={() => setShowCart(false)}>Close</Button>
                 <Button
                   disabled={cart.length === 0}
-                  onClick={() => setCart([])}
+                  onClick={clearCart}
                 >
                   <span>Clear</span>
                 </Button>

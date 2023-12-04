@@ -1,13 +1,8 @@
-import axios from "axios";
-import { useSelector } from "react-redux";
 import { productsCheckout } from "../../services/middleware";
 import { Button } from "@mui/material";
 import { useUIContext } from "../../hooks/context";
 
 const CheckoutButton = ({ cartItems }: any) => {  
-  // const { user } = useSelector((state: any) => ({
-  //   user: state.auth,
-  // }));
   const {userDetails} = useUIContext();
   
   console.log("userDetails", userDetails.user.id);

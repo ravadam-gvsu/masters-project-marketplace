@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { db } from "../../../common/auth/firebase-init";
 import {
   collection,
   query,
@@ -10,7 +9,7 @@ import {
 } from "firebase/firestore";
 import ConversationPage from "./conversations";
 import { Sms } from "@mui/icons-material";
-import { auth } from "../../../services/firebaseapi";
+import { auth, db } from "../../../services/firebaseapi";
 
 function Chats() {
   const [chats, setChats]: any = useState([]);
@@ -19,30 +18,30 @@ function Chats() {
   useEffect(() => {
     const currentUser: any = auth.currentUser;
 
-    // const q1 = query(
-    //   collection(db, "usersChats"),
-    //   where("user1Id", "==", currentUser.uid)
-    // );
+    const q1 = query(
+      collection(db, "usersChats"),
+      where("user1Id", "==", currentUser.uid)
+    );
 
-    // const q2 = query(
-    //   collection(db, "usersChats"),
-    //   where("user2Id", "==", currentUser.uid)
-    // // );
+    const q2 = query(
+      collection(db, "usersChats"),
+      where("user2Id", "==", currentUser.uid)
+    );
 
-    // const fetchChats = async (query, otherUserIdField) => {
-    //   const querySnapshot = await getDocs(query);
-    //   const fetchPromises = querySnapshot.docs.map(async (document: any) => {
-    //     const otherUserId = document.data()[otherUserIdField];
-    //     const userDocRef = doc(db, "users", otherUserId);
-    //     const userDocSnap = await getDoc(userDocRef);
-    //     return userDocSnap.data();
-    //   });
-    //   const chatsData = await Promise.all(fetchPromises);
-    //   setChats([...chats, ...chatsData]);
-    // };
+    const fetchChats = async (query, otherUserIdField) => {
+      const querySnapshot = await getDocs(query);
+      const fetchPromises = querySnapshot.docs.map(async (document: any) => {
+        const otherUserId = document.data()[otherUserIdField];
+        const userDocRef = doc(db, "users", otherUserId);
+        const userDocSnap = await getDoc(userDocRef);
+        return userDocSnap.data();
+      });
+      const chatsData = await Promise.all(fetchPromises);
+      setChats([...chats, ...chatsData]);
+    };
 
-    // fetchChats(q1, "user2Id");
-    // fetchChats(q2, "user1Id");
+    fetchChats(q1, "user2Id");
+    fetchChats(q2, "user1Id");
   }, []);
 
   return (

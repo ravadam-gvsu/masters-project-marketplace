@@ -280,8 +280,16 @@
   }
 }
 
-.description .buttons .amount .minus {
+.amount .minus {
   display: flex;
+  background: none;
+  border: none;
+}
+
+
+.amount .plus {
+  background: none;
+  border: none;
 }
 
 .description .buttons .amount p {
@@ -290,6 +298,7 @@
 }
 
 .description .buttons .add-to-cart {
+  width: max-content;
   padding: 15px 40px;
   background-color: var(--orange);
   color: #fff;
@@ -440,6 +449,7 @@ $z-index: (
 
   .logo {
     margin-right: 2rem;
+    display: flex;
   }
 
   .logo img {
@@ -486,6 +496,10 @@ $z-index: (
   padding: 0;
   margin: 0;
   text-align: right;
+
+  li:first-child {
+    margin-right: 20px;
+  }
 }
 
 .navigation-menu-item {

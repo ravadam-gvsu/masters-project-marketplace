@@ -32,6 +32,7 @@ import constants from "../../../../constants/validators";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useUIContext } from "../../../../hooks/context";
 import routes from "../../../../constants/routes";
+import { searchProductsService } from "../../../../services/firebaseapi";
 
 const theme = createTheme();
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -116,23 +117,36 @@ const useStyles = (theme: any) => ({
 
 const pages = [
   { name: "Products", path: routes.home },
-  { name: "Lost & Found", path: routes.profile },
+  { name: "Lost & Found", path: routes.lostnfound },
 ];
 
 export const Navbar = () => {
   const classes = useStyles(theme);
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [searchKey, setSearchKey] = useState("");
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
   const [openDrawer, setOpenDrawer] = useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const { cart, setShowCart, wishlist, setShowWishlist } = useUIContext();
+  const {
+    cart,
+    setShowCart,
+    wishlist,
+    setShowWishlist,
+    searchProducts,
+    setProducts,
+  } = useUIContext();
   console.log("setShowCart ", useUIContext());
   let navigate = useNavigate();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const search = async () => {
+    const searchedProducts = await searchProductsService(searchKey);
+    setProducts(searchedProducts);
+  };
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -335,7 +349,7 @@ export const Navbar = () => {
   // );
 
   const navbar = useRef(null);
-  
+
   return (
     <nav className="navigation" style={classes.bgColor} ref={navbar}>
       <div className="logo">
@@ -361,13 +375,18 @@ export const Navbar = () => {
       <Box sx={classes.search}>
         <InputBase
           placeholder="Search…"
+          value={searchKey}
           sx={{ root: classes.inputRoot, input: classes.inputInput }}
           endAdornment={
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={search}>
               <Search sx={classes.textWhite} />
             </IconButton>
           }
           inputProps={{ "aria-label": "search" }}
+          onChange={(val) => {
+            console.log(val);
+            setSearchKey(val.target.value);
+          }}
         />
       </Box>
 
@@ -405,7 +424,7 @@ export const Navbar = () => {
             }}
           >
             <StyledBadge badgeContent={cart?.length} color="secondary">
-              <ShoppingCart sx={classes.textWhite}/>
+              <ShoppingCart sx={classes.textWhite} />
             </StyledBadge>
           </IconButton>
         </li>
@@ -418,7 +437,7 @@ export const Navbar = () => {
             onClick={handleMobileMenuOpen}
             color="inherit"
           >
-            <AccountCircle sx={classes.textWhite}/>
+            <AccountCircle sx={classes.textWhite} />
           </IconButton>
         </li>
         {renderMobileMenu}
