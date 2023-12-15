@@ -15,7 +15,7 @@ const styles = (theme: any) => ({
     color: "#fff !important",
   },
   loginContainer: {
-    height: "100vh",
+    height: "90vh",
     color: "#ffffff",
     background: "url(assets/banner.png) 50% center / cover no-repeat fixed",
   },
@@ -95,21 +95,8 @@ function SignUp(props: any) {
       sx={classes.loginContainer}
     >
       {loader && <AppLoader />}
-      <Grid item xs={12}>
-        <Grid container alignItems="center">
-          <Grid item>
-            <IconButton onClick={backToLogin}>
-              <KeyboardBackspace sx={classes.textWhite} fontSize="large" />
-            </IconButton>
-          </Grid>
-          <Grid item xs={9}>
-            <Typography variant="h4" sx={classes.textWhite}>
-              Register
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item>
+      
+      <Grid item xs={5}>
         <RegistrationFieldsForm
           customerRegistrationPost={customerRegistrationPost}
           parentClasses={classes}

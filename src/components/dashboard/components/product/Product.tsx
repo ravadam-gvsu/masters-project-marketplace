@@ -32,9 +32,9 @@ export const Product = () => {
         <Grid item xs={9}>
           <Typography variant="h4">Dashboard</Typography>
         </Grid>
-        <Grid item xs={9}>
+        {/* <Grid item xs={9}>
           Some Advertisement Offers
-        </Grid>
+        </Grid> */}
         <Grid item xs={10}>
           <Grid container spacing={4}>
             {productsCollection.total &&

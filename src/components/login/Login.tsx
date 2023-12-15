@@ -88,19 +88,19 @@ const styles = (theme: any) => ({
     // flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-  }
+  },
 });
 
 const CssTextField = withStyles({
   root: {
-    '& label.Mui-focused': {
-      color: 'white',
+    "& label.Mui-focused": {
+      color: "white",
     },
     "& .MuiInput-underline:before": {
       borderBottom: `1px solid '#ffffff'`,
     },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'yellow',
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "yellow",
     },
     "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
       borderBottom: "2px solid #fffffa",
@@ -116,15 +116,15 @@ const CssTextField = withStyles({
       fontSize: "14px",
       fontWeight: "normal",
     },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'white',
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "white",
       },
-      '&:hover fieldset': {
-        borderColor: 'white',
+      "&:hover fieldset": {
+        borderColor: "white",
       },
-      '&.Mui-focused fieldset': {
-        borderColor: 'yellow',
+      "&.Mui-focused fieldset": {
+        borderColor: "yellow",
       },
     },
   },
@@ -144,22 +144,6 @@ export const Login = () => {
     let path = routes.customerRegistration;
     navigate(path);
     setIsLogin(false);
-  };
-
-  const comebackToLogin = ({ type = "", message = "" }) => {
-    // this.props.history.push({
-    //   pathname: `${this.props.match.path}`,
-    //   state: { type, message },
-    // });
-
-    // if (this.props.location.state) {
-    //   this.props.handleShowToast({
-    //     type: this.props.location.state.type,
-    //     message: this.props.location.state.message,
-    //   });
-    // }
-
-    setIsLogin(true);
   };
 
   const onSubmit = async (user: any, { setSubmitting }: any) => {
@@ -193,9 +177,6 @@ export const Login = () => {
       alignItems={"center"}
       sx={classes.loginContainer}
     >
-      {/* <Grid item>
-        <CommonToast />
-      </Grid> */}
       <Grid item xs={5}>
         <Paper sx={classes.loginPanel}>
           <Grid container>
@@ -221,71 +202,70 @@ export const Login = () => {
                     onSubmit={onSubmit}
                   >
                     {({ submitForm, isValid }) => (
-                      <Form style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                        {/* <Grid item xs={12}> */}
-                          <Box width="75%" p={2}>
-                            <Field
-                              component={CssTextField}
-                              fullWidth
-                              id="emailId"
-                              placeholder="Enter Email Address"
-                              title="Enter Email Address"
-                              type="text"
-                              name="email"
-                              InputProps={{
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <AccountCircle sx={classes.whiteText} />
-                                  </InputAdornment>
-                                ),
-                              }}
-                              autoComplete="off"
-                              variant="outlined"
-                            />
-                          </Box>
-                        {/* </Grid> */}
+                      <Form
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Box width="75%" p={2}>
+                          <Field
+                            component={CssTextField}
+                            fullWidth
+                            id="emailId"
+                            placeholder="Enter Email Address"
+                            title="Enter Email Address"
+                            type="text"
+                            name="email"
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <AccountCircle sx={classes.whiteText} />
+                                </InputAdornment>
+                              ),
+                            }}
+                            autoComplete="off"
+                            variant="outlined"
+                          />
+                        </Box>
 
-                        {/* <Grid
-                          item
-                          xs={12}
-                          textAlign={"center"}
-                        > */}
-                          <Box width="75%" p={2}>
-                            <Field
-                              component={CssTextField}
-                              id="password"
-                              placeholder="Enter Password"
-                              type={showPassword ? "text" : "password"}
-                              name="password"
-                              fullWidth
-                              autoComplete="off"
-                              InputProps={{
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <VpnKey sx={classes.whiteText} />
-                                  </InputAdornment>
-                                ),
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <IconButton
-                                      aria-label="toggle password visibility"
-                                      onClick={() =>
-                                        handleClickShowPassword("showPassword")
-                                      }
-                                    >
-                                      {showPassword ? (
-                                        <Visibility color="primary" />
-                                      ) : (
-                                        <VisibilityOff color="primary" />
-                                      )}
-                                    </IconButton>
-                                  </InputAdornment>
-                                ),
-                              }}
-                              variant="outlined"
-                            />
-                          </Box>
-                        {/* </Grid> */}
+                        <Box width="75%" p={2}>
+                          <Field
+                            component={CssTextField}
+                            id="password"
+                            placeholder="Enter Password"
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            fullWidth
+                            autoComplete="off"
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <VpnKey sx={classes.whiteText} />
+                                </InputAdornment>
+                              ),
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() =>
+                                      handleClickShowPassword("showPassword")
+                                    }
+                                  >
+                                    {showPassword ? (
+                                      <Visibility color="primary" />
+                                    ) : (
+                                      <VisibilityOff color="primary" />
+                                    )}
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                            variant="outlined"
+                          />
+                        </Box>
 
                         <Grid item xs={12} textAlign={"center"}>
                           <Box maxWidth="75%" m={4}>

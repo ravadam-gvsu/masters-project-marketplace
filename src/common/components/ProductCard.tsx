@@ -14,15 +14,11 @@ import {
   Grid,
   Tooltip,
 } from "@mui/material";
-import {
-  MoreVert as MoreVertIcon,
-} from "@mui/icons-material";
+import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import _, { toUpper } from "lodash";
 import constants from "../../constants/validators";
 import dayjs from "dayjs";
-import {
-  usagePeriodConverter,
-} from "../../utility/commonUtility";
+import { usagePeriodConverter } from "../../utility/commonUtility";
 import { createTheme } from "@mui/material/styles";
 import Carousel from "./ImageCarousel";
 import { useNavigate } from "react-router-dom";
@@ -138,7 +134,7 @@ const styles = (theme: any) => ({
       background: theme.palette.primary.main,
       color: theme.palette.common.white,
     },
-    marginRight: 2
+    marginRight: 2,
   },
   incBtn: {
     background: theme.palette.common.white,
@@ -314,27 +310,35 @@ export const ProductCard = ({ product }: any) => {
         </Tooltip>
         {productTitle.length < 45 ? <br /> : ""}
         <Grid container alignItems="baseline">
+          {specialRibbon && (
+            <Grid item>
+              <Typography
+                variant="body2"
+                style={{
+                  textDecorationLine: specialRibbon ? "line-through" : "none",
+                }}
+              >
+                ${originalPrice}
+              </Typography>
+            </Grid>
+          )}
+          <Grid item>&nbsp;</Grid>
           <Grid item>
             <Typography variant="body2" sx={{ fontWeight: "bold" }}>
               ${sellingPrice}
             </Typography>
           </Grid>
-          <Grid item>&nbsp;</Grid>
-          <Grid item>
-            <Typography
-              variant="body2"
-              style={{
-                textDecorationLine: specialRibbon ? "line-through" : "none",
-              }}
-            >
-              ${originalPrice}
-            </Typography>
-          </Grid>
-          {/* <Grid item>
-            <Typography variant="caption">
-              &nbsp;FREE Scheduled Delivery
-            </Typography>
-          </Grid> */}
+          {specialRibbon && (
+            <Grid item>
+              <Typography variant="caption">
+                &nbsp;&nbsp;
+                {(
+                  ((originalPrice - sellingPrice) / originalPrice) *
+                  100
+                ).toFixed()}%
+              </Typography>
+            </Grid>
+          )}
         </Grid>
         {/* <Grid container alignItems="baseline">
           <Grid item>

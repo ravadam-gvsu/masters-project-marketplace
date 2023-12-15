@@ -1,33 +1,93 @@
-import React, { Component, useState } from "react";
-import { Grid, Typography, Button, Box, IconButton } from "@mui/material";
+import React, { Fragment, useState } from "react";
+import {
+  Grid,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+  Paper,
+  createTheme,
+} from "@mui/material";
 import {
   Visibility,
   VisibilityOff,
   ChevronRightOutlined,
+  KeyboardBackspace,
 } from "@mui/icons-material";
 import { InputAdornment } from "@mui/material";
 import constants from "../../constants/validators";
-import { TextField as FTextField } from "formik-mui";
-import { Field, Form, Formik, useFormik, withFormik } from "formik";
+import { TextField } from "formik-mui";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { duplicateEmailAddressValidate } from "../../services/middleware";
 import _ from "lodash";
 import { validateEmail } from "../../utility/commonUtility";
 import { fetchSignInMethodsForEmail, getAuth } from "firebase/auth";
 import { app } from "../../common/auth/firebase-init";
+import { withStyles } from "@mui/styles";
+import routes from "../../constants/routes";
+import { useNavigate } from "react-router-dom";
 const auth = getAuth(app);
+const theme = createTheme();
+const styles = (theme: any) => ({
+  textWhite: {
+    color: "#fff !important",
+  },
+  regPanel: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // "#00000870",
+    borderRadius: 0,
+    height: "100%",
+    textAlign: "center",
+    padding: theme.spacing(12),
+  },
+  displayCenter: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
+const CssTextField = withStyles({
+  root: {
+    "& label.Mui-focused": {
+      color: "white",
+    },
+    "& .MuiInput-underline:before": {
+      borderBottom: `1px solid '#ffffff'`,
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "yellow",
+    },
+    "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+      borderBottom: "2px solid #fffffa",
+    },
+    "& .MuiInput-underline.Mui-error:after": {
+      borderBottomColor: "#FF99BC",
+    },
+    "& .MuiInputBase-input": {
+      color: "white",
+    },
+    "& .MuiFormLabel-root": {
+      color: "#ffffff",
+      fontSize: "14px",
+      fontWeight: "normal",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "white",
+      },
+      "&:hover fieldset": {
+        borderColor: "white",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "yellow",
+      },
+    },
+  },
+})(TextField);
 
 export const RegistrationFieldsForm = (props: any) => {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     showPassword: false,
-  //     showConfirmPassword: false,
-  //     errMsg: "",
-  //   };
-  // }
-
+  const classes = styles(theme);
   const state = {
     showLoader: false,
     isLogin: true,
@@ -37,6 +97,7 @@ export const RegistrationFieldsForm = (props: any) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  let navigate = useNavigate();
 
   const checkDuplicateEmailValidation = async (e: any) => {
     if (!_.isEmpty(e.target.value)) {
@@ -134,101 +195,114 @@ export const RegistrationFieldsForm = (props: any) => {
       ),
   });
 
+  const backToLogin = () => {
+    let path = routes.login;
+    navigate(path);
+  };
+
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={validationSchema}
-    >
-      {() => (
-        <Form noValidate>
-          <Box alignItems={"center"} justifyContent={"center"}>
-            <Box mt={2} maxWidth="80%">
-              <Grid container direction="column">
-                <Grid item>
-                  <Box minHeight="3rem" textAlign={"left"}>
+    <Paper sx={classes.regPanel}>
+      <Grid container sx={{ marginTop: "-65px" }}>
+        <Grid item xs={12}>
+          <Box width="75%" p={2}>
+            <Grid container alignItems="center">
+              <Grid item>
+                <IconButton onClick={backToLogin}>
+                  <KeyboardBackspace sx={classes.textWhite} fontSize="large" />
+                </IconButton>
+              </Grid>
+
+              <Typography variant="h4" sx={classes.textWhite}>
+                Register
+              </Typography>
+            </Grid>
+          </Box>
+          <Fragment>
+            <Formik
+              initialValues={initialValues}
+              onSubmit={onSubmit}
+              validationSchema={validationSchema}
+            >
+              {() => (
+                <Form
+                  noValidate
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Box width="75%" p={2}>
                     <Field
                       required
                       type="text"
                       label={"Enter First Name"}
                       name="firstName"
-                      component={FTextField}
+                      component={CssTextField}
                       fullWidth
                       className={parentClasses.enrollFormContrl}
-                      variant="standard"
+                      variant="outlined"
                     />
                   </Box>
-                </Grid>
-                <Grid item>
-                  <Box minHeight="3rem">
+                  <Box width="75%" p={2}>
                     <Field
                       required
                       type="text"
                       label={"Enter Last Name"}
                       name="lastName"
-                      component={FTextField}
+                      component={CssTextField}
                       fullWidth
                       className={parentClasses.enrollFormContrl}
-                      variant="standard"
+                      variant="outlined"
                     />
                   </Box>
-                </Grid>
-                <Grid item>
-                  <Box minHeight="3rem">
+                  <Box width="75%" p={2}>
                     <Field
                       required
                       type="text"
                       name="mobile"
                       label={"Enter Mobile Number"}
-                      component={FTextField}
+                      component={CssTextField}
                       fullWidth
                       className={parentClasses.enrollFormContrl}
-                      variant="standard"
+                      variant="outlined"
                     />
                   </Box>
-                </Grid>
-                <Grid item>
-                  <Box minHeight="3rem">
+                  <Box width="75%" p={2}>
                     <Field
                       required
                       type="text"
                       label={"Enter Email Address"}
                       name="email"
-                      component={FTextField}
+                      component={CssTextField}
                       fullWidth
-                      // InputProps={{
-                      //   onBlur: checkDuplicateEmailValidation,
-                      // }}
                       className={parentClasses.enrollFormContrl}
-                      variant="standard"
+                      variant="outlined"
                     />
                     <Typography color="error" variant="caption">
                       {errMsg}
                     </Typography>
                   </Box>
-                </Grid>
-                <Grid item>
-                  <Box minHeight="3rem" textAlign={"left"}>
+                  <Box width="75%" p={2}>
                     <Field
                       required
                       type="text"
                       label={"Enter City"}
                       name="city"
-                      component={FTextField}
+                      component={CssTextField}
                       fullWidth
                       className={parentClasses.enrollFormContrl}
-                      variant="standard"
+                      variant="outlined"
                     />
                   </Box>
-                </Grid>
-                <Grid item>
-                  <Box minHeight="3rem">
+                  <Box width="75%" p={2}>
                     <Field
                       required
                       type={showPassword ? "text" : "password"}
                       label={"Enter Password"}
                       name="password"
-                      component={FTextField}
+                      component={CssTextField}
                       fullWidth
                       className={parentClasses.enrollFormContrl}
                       InputProps={{
@@ -249,18 +323,16 @@ export const RegistrationFieldsForm = (props: any) => {
                           </InputAdornment>
                         ),
                       }}
-                      variant="standard"
+                      variant="outlined"
                     />
                   </Box>
-                </Grid>
-                <Grid item>
-                  <Box minHeight="3rem">
+                  <Box width="75%" p={2}>
                     <Field
                       required
                       type={showConfirmPassword ? "text" : "password"}
                       label={"Confirm Password"}
                       name="confirmPassword"
-                      component={FTextField}
+                      component={CssTextField}
                       fullWidth
                       className={parentClasses.enrollFormContrl}
                       InputProps={{
@@ -281,11 +353,9 @@ export const RegistrationFieldsForm = (props: any) => {
                           </InputAdornment>
                         ),
                       }}
-                      variant="standard"
+                      variant="outlined"
                     />
                   </Box>
-                </Grid>
-                <Grid item>
                   <Box mt={8}>
                     <Typography variant="caption" sx={parentClasses.whiteText}>
                       By creating an account you accept the Terms & Conditions
@@ -305,95 +375,12 @@ export const RegistrationFieldsForm = (props: any) => {
                       </Button>
                     </Box>
                   </Box>
-                </Grid>
-              </Grid>
-            </Box>
-          </Box>
-        </Form>
-      )}
-    </Formik>
+                </Form>
+              )}
+            </Formik>
+          </Fragment>
+        </Grid>
+      </Grid>
+    </Paper>
   );
 };
-
-// const RegistrationFields = withFormik({
-//   mapPropsToValues(props) {
-//     return {
-//       props,
-//       firstName: "",
-//       lastName: "",
-//       mobile: "",
-//       email: "",
-//       city: "",
-//       password: "",
-//       confirmPassword: "",
-//     };
-//   },
-//   validateOnChange: true,
-//   validateOnBlur: true,
-
-//   validationSchema: Yup.object().shape({
-//     firstName: Yup.string()
-//       .max(
-//         constants.fieldLengths.firstName,
-//         `First Name max length is ${constants.fieldLengths.firstName}`
-//       )
-//       .required("First name cannot be empty"),
-
-//     lastName: Yup.string()
-//       .max(
-//         constants.fieldLengths.lastName,
-//         `Last Name max length is ${constants.fieldLengths.lastName}`
-//       )
-//       .required("Last name cannot be empty"),
-
-//     mobile: Yup.string()
-//       .max(
-//         constants.fieldLengths.mobile,
-//         `Mobile max length is ${constants.fieldLengths.mobile}`
-//       )
-//       .matches(constants.regex.mobile, "Enter a valid Mobile number")
-//       .required("Mobile number cannot be empty"),
-
-//     email: Yup.string()
-//       .email("Not a valid email address")
-//       .required("Email address cannot be empty"),
-
-//     city: Yup.string().required("City cannot be empty"),
-
-//     password: Yup.string()
-//       .required("Password cannot be empty")
-//       .matches(constants.regex.password, "Enter a valid Password")
-//       .max(
-//         constants.fieldLengths.password,
-//         `Password max length is ${constants.fieldLengths.password}`
-//       ),
-
-//     confirmPassword: Yup.string()
-//       .required("Password cannot be empty")
-//       .matches(constants.regex.password, "Enter a valid Password")
-//       .oneOf([Yup.ref("password"), ""], "Passwords do not match")
-//       .max(
-//         constants.fieldLengths.password,
-//         `Password max length is ${constants.fieldLengths.password}`
-//       ),
-//   }),
-
-//   handleSubmit: async (values, { props, setSubmitting }) => {
-//     // props.toggleLoader(true);
-
-//     const payload = {
-//       firstName: _.get(values, "firstName"),
-//       lastName: _.get(values, "lastName"),
-//       mobile: _.get(values, "mobile"),
-//       email: _.get(values, "email"),
-//       city: _.get(values, "city"),
-//       password: _.get(values, "password"),
-//     };
-
-//     // await props.customerRegistrationPost(payload);
-//     // props.toggleLoader(false);
-//     setSubmitting(false);
-//   },
-// })(RegistrationFieldsForm);
-
-// export default RegistrationFields;

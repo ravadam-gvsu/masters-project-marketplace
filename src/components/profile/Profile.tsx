@@ -128,6 +128,7 @@ export const Profile = () => {
         productImage: details.productImage,
         productImages: details.productImages,
         productDescription: details.productDescription,
+        itemPrice: details.itemPrice,
         sellingPrice: details.sellingPrice,
         availabilityArea: {
           state: "",
@@ -137,19 +138,20 @@ export const Profile = () => {
           name:
             userDetails.user &&
             `${userDetails.user["firstName"]} ${userDetails.user["lastName"]}`,
-          id: userDetails.user && `${userDetails.user["uid"]}`,
+          id: userDetails.user && `${userDetails.user["id"]}`,
         },
         quantity: details.quantity,
+        maxQuantity: details.quantity,
       };
 
       await saveProduct(key, payload)
         .then((res: any) => {
-          if (res.user) {
-            showSnackBar("Product saved successfully!", "success");
+          if (res.success) {
+            showSnackBar(res.message, res.success);
             let path = routes.product;
             navigate(path);
           } else {
-            showSnackBar("Error saving product!", "error");
+            showSnackBar(res.message, res.error);
           }
         })
         .catch((err: any) => {
@@ -169,12 +171,12 @@ export const Profile = () => {
       };
       await saveItem(key, payload)
         .then((res: any) => {
-          if (res.user) {
-            showSnackBar("Item saved successfully!", "success");
+          if (res.success) {
+            showSnackBar(res.message, res.success);
             let path = routes.lostnfound;
             navigate(path);
           } else {
-            showSnackBar("Error saving item!", "error");
+            showSnackBar(res.message, res.error);
           }
         })
         .catch((err: any) => {

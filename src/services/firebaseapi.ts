@@ -515,6 +515,7 @@ export const storeImage = async (imageFile) => {
 };
 
 export const saveProduct = async (id, product) => {
+    let response = {};
     let { productImage, productImages, ...payload } = product;
     productImages = productImages ? [...productImages] : [];
     const allImages$ = productImages.map(storeImage)
@@ -527,7 +528,15 @@ export const saveProduct = async (id, product) => {
         specialRibbon: (payload.itemPrice !== payload.sellingPrice),
         timestamp: Date.now(),
     }
-    return setDoc(doc(db, 'products', id), dataToSave);
+    await setDoc(doc(db, 'products', id), dataToSave)
+        .then(docRef => {
+            response = { status: 'success', message: 'Product saved successfully!' };
+        })
+        .catch(error => {
+            response = { status: 'error', message: error.message };
+        })
+
+    return response;
 }
 
 export const generateKey = () => doc(collection(db, "products")).id;
@@ -541,6 +550,7 @@ export const editProduct = (id, updates) =>
 export const removeProduct = (id) => deleteDoc(doc(db, "products", id));
 
 export const saveItem = async (id, product) => {
+    let response = {};
     let { itemImage, itemImages, ...payload } = product;
     itemImages = itemImages ? [...itemImages] : [];
     const allImages$ = itemImages.map(storeImage)
@@ -551,7 +561,15 @@ export const saveItem = async (id, product) => {
         claimStatus: false,
         postedOn: Date.now(),
     }
-    return setDoc(doc(db, 'items', id), dataToSave);
+    await setDoc(doc(db, 'items', id), dataToSave)
+        .then(docRef => {
+            response = { status: 'success', message: 'Item saved successfully!' };
+        })
+        .catch(error => {
+            response = { status: 'error', message: error.message };
+        })
+
+    return response;
 }
 
 export const addChatsToFirestore = async (conversationId, user1Id, user2Id) => {
